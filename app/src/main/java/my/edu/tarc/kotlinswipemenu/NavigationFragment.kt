@@ -21,7 +21,8 @@ class NavigationFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_navigation, container, false)
 
         binding.btnToApplication.setOnClickListener() {
-            println()
+            val action = NavigationFragmentDirections.actionNavigationFragmentToListInsuranceApplicationFragment()
+            Navigation.findNavController(it).navigate(action)
         }
         binding.btnToApply.setOnClickListener() {
             val action = NavigationFragmentDirections.actionNavigationFragmentToApplyInsuranceFragment()
@@ -31,6 +32,7 @@ class NavigationFragment : Fragment() {
             val action = NavigationFragmentDirections.actionNavigationFragmentToListInsuranceFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
 
 
         return binding.root

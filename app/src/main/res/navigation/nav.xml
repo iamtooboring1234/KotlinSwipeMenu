@@ -49,10 +49,18 @@
         <action
             android:id="@+id/action_navigationFragment_to_applyInsuranceFragment"
             app:destination="@id/applyInsuranceFragment" />
+        <action
+            android:id="@+id/action_navigationFragment_to_listInsuranceApplicationFragment"
+            app:destination="@id/listInsuranceApplicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/applyInsuranceFragment"
         android:name="my.edu.tarc.kotlinswipemenu.ApplyInsuranceFragment"
         android:label="fragment_apply_insurance"
         tools:layout="@layout/fragment_apply_insurance" />
+    <fragment
+        android:id="@+id/listInsuranceApplicationFragment"
+        android:name="my.edu.tarc.kotlinswipemenu.ListInsuranceApplicationFragment"
+        android:label="fragment_list_insurance_application"
+        tools:layout="@layout/fragment_list_insurance_application" />
 </navigation>
