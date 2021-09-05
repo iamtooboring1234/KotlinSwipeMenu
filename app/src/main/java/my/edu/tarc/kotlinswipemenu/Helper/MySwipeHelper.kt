@@ -1,6 +1,7 @@
 package my.edu.tarc.kotlinswipemenu.Helper
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Point
@@ -39,7 +40,8 @@ abstract class MySwipeHelper (context: Context, private val recyclerView: Recycl
     }
 
 
-    private val onTouchListener = View.OnTouchListener {_,motionEvent ->
+    @SuppressLint("ClickableViewAccessibility")
+    private val onTouchListener = View.OnTouchListener { _, motionEvent ->
         if (swipePosition < 0) return@OnTouchListener false
         val point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
         val swipeViewHolder = recyclerView.findViewHolderForAdapterPosition(swipePosition)

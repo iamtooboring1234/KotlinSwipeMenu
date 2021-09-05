@@ -52,7 +52,7 @@ class MyButton(
         else {
             val d = ContextCompat.getDrawable(context, imageResId)
             val bitmap = drawableToBitmap(d)
-            c.drawBitmap(bitmap, (rectF.left+rectF.right)/2.1F, (rectF.top+rectF.bottom)/2, p)
+            c.drawBitmap(bitmap, (rectF.left+rectF.right)/2.1F, (rectF.top+rectF.bottom)/2 - 30, p)
         }
         clickRegion = rectF
         this.pos = pos
