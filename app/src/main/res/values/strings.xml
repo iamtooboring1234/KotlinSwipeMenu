@@ -8,4 +8,7 @@
         <item>Van Insurance</item>
         <item>Lorry Insurance</item>
     </string-array>
+    <string name="pending">Pending</string>
+    <string name="Accepted">Accepted</string>
+    <string name="Rejected">Rejected</string>
 </resources>

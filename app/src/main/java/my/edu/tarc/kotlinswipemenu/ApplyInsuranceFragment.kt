@@ -11,20 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import my.edu.tarc.kotlinswipemenu.adapter.UploadListAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentApplyInsuranceBinding
-import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
-
+import my.edu.tarc.kotlinswipemenu.viewModel.File
 
 class ApplyInsuranceFragment : Fragment() {
 
     private var tempbinding: FragmentApplyInsuranceBinding? = null
     private val binding get() = tempbinding!!
-    private var fileNameList = ArrayList<String>()
+    private var fileNameList = ArrayList<File>()
+    private lateinit var fileAdapter : UploadListAdapter
+    private lateinit var fileToUplaod :StorageReference
 
-    private var mStorange : StorageReference = FirebaseStorage.getInstance().getReference()
+    private var mStorange : StorageReference = FirebaseStorage.getInstance().reference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,20 +34,40 @@ class ApplyInsuranceFragment : Fragment() {
 
         tempbinding = FragmentApplyInsuranceBinding.inflate(inflater,  container ,false)
 
+        fileAdapter = UploadListAdapter(fileNameList, UploadListAdapter.RemoveListener {
+                File ->val it = view
+            var position:Int = 0
+
+            println(fileNameList.size)
+
+            try {
+                for (i in 0 until fileNameList.size) {
+                    if (File.FileName.equals(fileNameList[i].FileName)) {
+                        fileNameList.removeAt(i)
+                        binding.rvFileUpload.adapter = fileAdapter
+                        fileAdapter.notifyDataSetChanged()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Delete too fast, slow down.", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        binding.rvFileUpload.setHasFixedSize(true)
+        binding.rvFileUpload.adapter = fileAdapter
+        fileAdapter.notifyDataSetChanged()
+
         binding.btnUpload.setOnClickListener() {
 
             val filesIntent: Intent = Intent(Intent.ACTION_GET_CONTENT)
             filesIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             filesIntent.addCategory(Intent.CATEGORY_OPENABLE)
-            filesIntent.type = "*/*" //use image/* for photos, etc.
+            filesIntent.type = "*/*"
 
             startActivityForResult(Intent.createChooser(filesIntent, "Select PDF File"), 777)
 
             Toast.makeText(context, "Upload", Toast.LENGTH_SHORT).show()
         }
-
-
-
 
         return binding.root
 
@@ -70,16 +91,26 @@ class ApplyInsuranceFragment : Fragment() {
 
                     val fileName: String = getFileName(fileUri)
 
-                    println(fileUri)
-                    println(fileName)
+                    val selectedFile = File(fileName, fileUri)
 
-                    fileNameList.add(fileName)
-                    binding.textView2.text = fileNameList.toString()
+                    fileNameList.add(selectedFile)
 
-                    var fileToUplaod :StorageReference = mStorange.child("Images").child(fileName)
+                    fileAdapter.notifyDataSetChanged()
 
-                    fileToUplaod.putFile(fileUri).addOnSuccessListener {
-                        Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
+                    binding.btnApply.setOnClickListener() {
+                        for(fileCount in 0 until fileNameList.size) {
+                            fileToUplaod = fileNameList[fileCount].FileName?.let { it ->
+                                mStorange.child("Evidences Insurance Application").child(
+                                    it
+                                )
+                            }!!
+
+                            fileNameList[fileCount].FileUri?.let { it ->
+                                fileToUplaod.putFile(it).addOnSuccessListener {
+                                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -96,11 +127,8 @@ class ApplyInsuranceFragment : Fragment() {
                     println(fileUri)
                     println(fileName)
 
-                    fileNameList.add(fileName)
-                    binding.textView2.text = fileNameList.toString()
 
-                }
-
+            }
         }
     }
 
