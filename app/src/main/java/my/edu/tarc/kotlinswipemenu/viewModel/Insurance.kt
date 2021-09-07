@@ -1,6 +1,4 @@
-package my.edu.tarc.kotlinswipemenu.Model
-
-import java.util.*
+package my.edu.tarc.kotlinswipemenu.viewModel
 
 data class Insurance(
     val insuranceID: String?=null,

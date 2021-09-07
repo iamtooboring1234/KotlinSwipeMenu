@@ -2,7 +2,6 @@ package my.edu.tarc.kotlinswipemenu
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +9,16 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import my.edu.tarc.kotlinswipemenu.Adapter.InsuranceAdapter
+import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.Helper.MyButton
 import my.edu.tarc.kotlinswipemenu.Helper.MySwipeHelper
 import my.edu.tarc.kotlinswipemenu.Listener.MyButtonClickListener
-import my.edu.tarc.kotlinswipemenu.Model.Insurance
+import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentListInsuranceBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,7 +27,6 @@ import kotlin.collections.ArrayList
 class ListInsuranceFragment : Fragment() {
 
     lateinit var adapter : InsuranceAdapter
-    lateinit var layoutManager: LinearLayoutManager
 
     private val database = FirebaseDatabase.getInstance()
     private val myRef = database.getReference("Insurance")
@@ -46,13 +43,10 @@ class ListInsuranceFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
         tempbinding = FragmentListInsuranceBinding.inflate(inflater,  container ,false)
 
         binding.rvInsuranceList.setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(activity)
-        binding.rvInsuranceList.layoutManager = layoutManager
 
         val swipe = object: MySwipeHelper(requireActivity(), binding.rvInsuranceList, 200) {
             override fun instantiateMyButton(
@@ -93,6 +87,11 @@ class ListInsuranceFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
 
+        binding.btnBackListInsurance.setOnClickListener() {
+            val action = ListInsuranceFragmentDirections.actionListInsuranceFragmentToNavigationFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
         binding.searchInsurance.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -104,7 +103,8 @@ class ListInsuranceFragment : Fragment() {
                     tempinsuranceList.clear()
                     val search = newText.lowercase(Locale.getDefault())
                     for (insurance in insuranceList) {
-                        if (insurance.insuranceName?.lowercase(Locale.getDefault())?.contains(search) == true) {
+                        val combineText:String = insurance.insuranceID + "-" + insurance.insuranceComp + "-" + insurance.insuranceName
+                        if (combineText.lowercase(Locale.getDefault()).contains(search)) {
                             tempinsuranceList.add(insurance)
                         }
                     }
@@ -114,11 +114,6 @@ class ListInsuranceFragment : Fragment() {
 
                     binding.rvInsuranceList.adapter!!.notifyDataSetChanged()
 
-                } else {
-                    tempinsuranceList.clear()
-                    tempinsuranceList.addAll(insuranceList)
-
-                    binding.rvInsuranceList.adapter!!.notifyDataSetChanged()
                 }
 
                 return true
@@ -154,11 +149,16 @@ class ListInsuranceFragment : Fragment() {
                         insuranceList.add(insurance)
 
                     }
+
                     tempinsuranceList.addAll(insuranceList)
+                    binding.shimmerViewContainer.stopShimmer()
+                    binding.shimmerViewContainer.visibility = View.GONE
                     binding.rvInsuranceList.visibility = View.VISIBLE
                     binding.rvInsuranceList.adapter?.notifyDataSetChanged()
+
                 } else {
                     insuranceList.clear()
+                    tempinsuranceList.clear()
                     binding.rvInsuranceList.visibility = View.INVISIBLE
                     binding.rvInsuranceList.adapter?.notifyDataSetChanged()
                 }

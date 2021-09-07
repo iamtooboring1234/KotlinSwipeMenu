@@ -2,7 +2,6 @@ package my.edu.tarc.kotlinswipemenu
 
 import android.R
 import android.os.Bundle
-import android.renderscript.Sampler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import my.edu.tarc.kotlinswipemenu.Adapter.InsuranceAdapter
-import my.edu.tarc.kotlinswipemenu.Model.Insurance
+import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
+import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentUpdateInsuranceBinding
 
 class UpdateInsuranceFragment : Fragment() {

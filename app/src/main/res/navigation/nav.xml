@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_listInsuranceFragment_to_updateInsuranceFragment"
             app:destination="@id/updateInsuranceFragment" />
+        <action
+            android:id="@+id/action_listInsuranceFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
     </fragment>
     <fragment
         android:id="@+id/insuranceAddFragment"
@@ -57,10 +60,18 @@
         android:id="@+id/applyInsuranceFragment"
         android:name="my.edu.tarc.kotlinswipemenu.ApplyInsuranceFragment"
         android:label="fragment_apply_insurance"
-        tools:layout="@layout/fragment_apply_insurance" />
+        tools:layout="@layout/fragment_apply_insurance" >
+        <action
+            android:id="@+id/action_applyInsuranceFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/listInsuranceApplicationFragment"
         android:name="my.edu.tarc.kotlinswipemenu.ListInsuranceApplicationFragment"
         android:label="fragment_list_insurance_application"
-        tools:layout="@layout/fragment_list_insurance_application" />
+        tools:layout="@layout/fragment_list_insurance_application" >
+        <action
+            android:id="@+id/action_listInsuranceApplicationFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
 </navigation>

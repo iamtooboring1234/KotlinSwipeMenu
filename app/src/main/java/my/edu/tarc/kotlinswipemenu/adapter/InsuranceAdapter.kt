@@ -1,4 +1,4 @@
-package my.edu.tarc.kotlinswipemenu.Adapter
+package my.edu.tarc.kotlinswipemenu.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import my.edu.tarc.kotlinswipemenu.Model.Insurance
+import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.R
 
 class InsuranceAdapter(internal var context: Context, internal var insuranceList:MutableList<Insurance>) :
