@@ -10,10 +10,9 @@ import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
+import androidx.core.text.isDigitsOnly
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.database.DataSnapshot
@@ -25,15 +24,19 @@ import com.google.firebase.storage.StorageReference
 import my.edu.tarc.kotlinswipemenu.adapter.UploadListAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentApplyInsuranceBinding
 import my.edu.tarc.kotlinswipemenu.functions.checkUser
+import my.edu.tarc.kotlinswipemenu.functions.resetForm
 import my.edu.tarc.kotlinswipemenu.viewModel.File
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
+import my.edu.tarc.kotlinswipemenu.viewModel.InsuranceApplication
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ApplyInsuranceFragment : Fragment() {
 
     private var insuranceCustList = ArrayList<Insurance>()
 
-    private var tempbinding: FragmentApplyInsuranceBinding? = null
-    private val binding get() = tempbinding!!
+    private lateinit var binding: FragmentApplyInsuranceBinding
 
     private var fileNameList = ArrayList<File>()
 
@@ -42,8 +45,8 @@ class ApplyInsuranceFragment : Fragment() {
     private val insuranceApplicationRef = database.getReference("InsuranceApplication")
 
     private lateinit var fileAdapter : UploadListAdapter
-    private lateinit var fileToUplaod :StorageReference
-    private var mStorange : StorageReference = FirebaseStorage.getInstance().reference
+    private lateinit var fileToUpload :StorageReference
+    private var mStorage : StorageReference = FirebaseStorage.getInstance().reference
 
     private val args: ApplyInsuranceFragmentArgs by navArgs()
 
@@ -52,7 +55,7 @@ class ApplyInsuranceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        tempbinding = FragmentApplyInsuranceBinding.inflate(inflater,  container ,false)
+        binding = FragmentApplyInsuranceBinding.inflate(inflater,  container ,false)
 
         fileAdapter = UploadListAdapter(fileNameList, UploadListAdapter.RemoveListener {
                 File ->val it = view
@@ -86,6 +89,32 @@ class ApplyInsuranceFragment : Fragment() {
 
         }
 
+        binding.btnApply.setOnClickListener() {
+            if (checkError()) {
+                for (fileCount in 0 until fileNameList.size) {
+                    fileToUpload = fileNameList[fileCount].FileName?.let { it ->
+                        checkUser().getCurrentUserUID()?.let { it1 ->
+                            mStorage.child("Evidences Insurance Application").child("User_$it1")
+                                .child(
+                                    it
+                                )
+                        }
+                    }!!
+
+                    fileNameList[fileCount].FileUri?.let { it ->
+                        fileToUpload.putFile(it).addOnSuccessListener {
+                            Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                addInsuranceApplication()
+            }
+        }
+
+        binding.btnReset.setOnClickListener() {
+            resetForm().resetAllField(view as ViewGroup)
+        }
+
         return binding.root
 
     }
@@ -103,6 +132,7 @@ class ApplyInsuranceFragment : Fragment() {
 
                 var totalItemSelected:Int = data.clipData!!.itemCount
 
+                Toast.makeText(context, "Multiple", Toast.LENGTH_SHORT).show()
 
                 for (count in 0 until totalItemSelected) {
 
@@ -116,32 +146,11 @@ class ApplyInsuranceFragment : Fragment() {
 
                     fileAdapter.notifyDataSetChanged()
 
-                    binding.btnApply.setOnClickListener() {
-                        for(fileCount in 0 until fileNameList.size) {
-                            fileToUplaod = fileNameList[fileCount].FileName?.let { it ->
-                                checkUser().getCurrentUserUID()?.let { it1 ->
-                                    mStorange.child("Evidences Insurance Application").child(it1).child(
-                                        it
-                                    )
-                                }
-                            }!!
-
-                            fileNameList[fileCount].FileUri?.let { it ->
-                                fileToUplaod.putFile(it).addOnSuccessListener {
-                                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-
-                        val
-
-
-                        addInsuranceApplication()
-                    }
-
                 }
 
             } else if (data?.data != null){
+
+                Toast.makeText(context, "Single", Toast.LENGTH_SHORT).show()
 
                 val fileUri: Uri = data.data!!
 
@@ -153,45 +162,54 @@ class ApplyInsuranceFragment : Fragment() {
 
                 fileAdapter.notifyDataSetChanged()
 
-                binding.btnApply.setOnClickListener() {
-                    for(fileCount in 0 until fileNameList.size) {
-                        fileToUplaod = fileNameList[fileCount].FileName?.let { it ->
-                            checkUser().getCurrentUserUID()?.let { it1 ->
-                                mStorange.child("Evidences Insurance Application").child("User_$it1").child(
-                                    it
-                                )
-                            }
-                        }!!
-
-                        fileNameList[fileCount].FileUri?.let { it ->
-                            fileToUplaod.putFile(it).addOnSuccessListener {
-                                Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
             }
         }
     }
 
     private fun addInsuranceApplication() {
         var newID:String = ""
-
-        insuranceRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        val sdfID = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        insuranceApplicationRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    newID = "IN" + "%03d".format(snapshot.childrenCount + 1)
+                    newID = sdfID.format(Date())
+                        .toString() + "-" + binding.tvCustInsuranceComp.text.toString() + "-" + "IA" + "%03d".format(
+                        snapshot.childrenCount + 1
+                    )
                 } else {
-                    newID = "RR0001"
+                    newID = sdfID.format(Date())
+                        .toString() + "-" + binding.tvCustInsuranceComp.text.toString() + "-" + "IA001"
                 }
 
-                val newInsurance = Insurance(newID, insuranceName, insuranceComp, insurancePlan, insuranceType, insuranceCoverage)
+                val rbAirBag: RadioButton =
+                    binding.radGrpAirBag.findViewById(binding.radGrpAirBag.checkedRadioButtonId)
+                val rbUsage: RadioButton =
+                    binding.radGrpUsage.findViewById(binding.radGrpUsage.checkedRadioButtonId)
+                val rbAntiLockBrake: RadioButton =
+                    binding.radGrpAntiLockBrake.findViewById(binding.radGrpAntiLockBrake.checkedRadioButtonId)
 
-                insuranceRef.push().setValue(newInsurance).addOnSuccessListener(){
+                val newInsApp = InsuranceApplication(
+                    newID,
+                    args.insuranceID,
+                    checkUser().getCurrentUserUID(),
+                    Date(),
+                    "Pending",
+                    true,
+                    binding.tfCarNoPlate.toString(),
+                    binding.tfYearMake.toString(),
+                    binding.tfModelName.toString(),
+                    binding.tfMileage.toString(),
+                    rbUsage.text.toString(),
+                    rbAirBag.text.toString(),
+                    rbAntiLockBrake.text.toString()
+                )
+
+                insuranceApplicationRef.push().setValue(newInsApp).addOnSuccessListener() {
                     Toast.makeText(context, "Add successful", Toast.LENGTH_LONG).show()
                 }.addOnFailureListener {
                     Toast.makeText(context, "Add unsuccessful", Toast.LENGTH_LONG).show()
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -200,6 +218,7 @@ class ApplyInsuranceFragment : Fragment() {
 
         })
     }
+
 
     private fun getFileName(uri: Uri): String {
         var result: String? = null
@@ -282,4 +301,50 @@ class ApplyInsuranceFragment : Fragment() {
             }
         })
     }
+
+    private fun checkError() : Boolean {
+        if(binding.tfCarNoPlate.text.toString().isEmpty()) {
+            binding.tfCarNoPlate.error = "Cannot be blank."
+            return false
+        }
+
+        if(binding.tfMileage.text.toString().isEmpty()) {
+            binding.tfMileage.error = "Cannot be blank."
+            return false
+        } else if (!binding.tfMileage.text.toString().isDigitsOnly()) {
+            binding.tfMileage.error = "Digits only."
+            return false
+        }
+
+        if(binding.tfModelName.text.toString().isEmpty()) {
+            binding.tfModelName.error = "Cannot be blank."
+            return false
+        }
+
+        if(binding.tfYearMake.text.toString().isEmpty()) {
+            binding.tfYearMake.error = "Cannot be blank."
+            return false
+        } else if (!binding.tfMileage.text.toString().isDigitsOnly()) {
+            binding.tfYearMake.error = "Digits only."
+            return false
+        }
+
+        if (binding.radGrpAirBag.checkedRadioButtonId == -1){
+            Toast.makeText(context, "Please select an Air Bag option.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        if (binding.radGrpAntiLockBrake.checkedRadioButtonId == -1){
+            Toast.makeText(context, "Please select an Anti-lock Brake option.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        if (binding.radGrpUsage.checkedRadioButtonId == -1){
+            Toast.makeText(context, "Please select an Usage option.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        return true
+    }
+
 }

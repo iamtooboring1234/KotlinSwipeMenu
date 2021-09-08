@@ -85,4 +85,13 @@
     <string name="share_via">Share via</string>
     <string name="share">Share</string>
     <string name="registerSuccessMsg">You have successfully registered a new account. Please check your email to verify the account. You can login to the account after the verification.</string>
+    <string name="other">Other</string>
+    <string name="_4_wheel_standard">4 Wheel Standard</string>
+    <string name="_4_wheel">4 Wheel</string>
+    <string name="none">None</string>
+    <string name="personal">Personal</string>
+    <string name="carpool">Carpool</string>
+    <string name="business">Business</string>
+    <string name="driver_and_passenger"><![CDATA[Driver & Passenger]]></string>
+    <string name="driver">Driver</string>
 </resources>

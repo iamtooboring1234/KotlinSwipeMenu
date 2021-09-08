@@ -72,7 +72,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+                app:layout_constraintTop_toBottomOf="@+id/tfCarNoPlate" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -84,7 +84,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+                app:layout_constraintTop_toBottomOf="@+id/tfYearMake" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -96,7 +96,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3" />
+                app:layout_constraintTop_toBottomOf="@+id/tfModelName" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -108,7 +108,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4" />
+                app:layout_constraintTop_toBottomOf="@+id/tfMileage" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -120,7 +120,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/radGrpUsage" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -136,7 +136,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintVertical_bias="0.0" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/tfCarNoPlate"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -153,7 +153,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/tfYearMake"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -171,7 +171,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName3"
+                android:id="@+id/tfModelName"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -189,7 +189,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName4"
+                android:id="@+id/tfMileage"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -207,43 +207,43 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
             <RadioGroup
-                android:id="@+id/radioGroup2"
+                android:id="@+id/radGrpAirBag"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
+                app:layout_constraintBottom_toBottomOf="@+id/radGrpUsage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.535"
-                app:layout_constraintStart_toEndOf="@+id/radioGroup"
+                app:layout_constraintStart_toEndOf="@+id/radGrpUsage"
                 app:layout_constraintTop_toBottomOf="@+id/textView9"
                 app:layout_constraintVertical_bias="0.0">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/radAirBagNone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="None" />
+                    android:text="@string/none" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/radAirBagDriver"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Driver" />
+                    android:text="@string/driver" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/radAirBagDriverPassenger"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Driver &amp; Passenger" />
+                    android:text="@string/driver_and_passenger" />
 
             </RadioGroup>
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/radGrpUsage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/radioGroup2"
+                app:layout_constraintEnd_toStartOf="@+id/radGrpAirBag"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView8">
 
@@ -251,34 +251,34 @@ xmlns:tools="http://schemas.android.com/tools">
                     android:id="@+id/radioButton5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Business" />
+                    android:text="@string/business" />
 
                 <RadioButton
                     android:id="@+id/radioButton6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Carpool" />
+                    android:text="@string/carpool" />
 
                 <RadioButton
                     android:id="@+id/radioButton7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Personal" />
+                    android:text="@string/personal" />
 
                 <RadioButton
                     android:id="@+id/radioButton12"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Other" />
+                    android:text="@string/other" />
 
             </RadioGroup>
 
             <RadioGroup
-                android:id="@+id/radioGroup3"
+                android:id="@+id/radGrpAntiLockBrake"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/radioGroup2"
+                app:layout_constraintEnd_toStartOf="@+id/radGrpAirBag"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView11">
 
@@ -286,25 +286,25 @@ xmlns:tools="http://schemas.android.com/tools">
                     android:id="@+id/radioButton8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="None" />
+                    android:text="@string/none" />
 
                 <RadioButton
                     android:id="@+id/radioButton10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4 Wheel" />
+                    android:text="@string/_4_wheel" />
 
                 <RadioButton
                     android:id="@+id/radioButton9"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="4 Wheel Standard" />
+                    android:text="@string/_4_wheel_standard" />
 
                 <RadioButton
                     android:id="@+id/radioButton11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Other" />
+                    android:text="@string/other" />
             </RadioGroup>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -344,7 +344,7 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup3" />
+                app:layout_constraintTop_toBottomOf="@+id/radGrpAntiLockBrake" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -364,11 +364,12 @@ xmlns:tools="http://schemas.android.com/tools">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:text="Apply"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintEnd_toStartOf="@+id/btnReset"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/constraintLayout10" />
 
@@ -457,6 +458,17 @@ xmlns:tools="http://schemas.android.com/tools">
                 app:layout_constraintTop_toBottomOf="@+id/tvCustInsuranceType" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Reset"
+            app:backgroundTint="@color/red_rejected"
+            app:layout_constraintBottom_toBottomOf="@+id/btnApply"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnApply" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

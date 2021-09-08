@@ -26,15 +26,14 @@ class ListInsuranceApplicationFragment : Fragment() {
     private var insApplicationList = ArrayList<InsuranceApplication>()
     private var tempInsApplicationList = ArrayList<InsuranceApplication>()
 
-    private var tempbinding: FragmentListInsuranceApplicationBinding? = null
-    private val binding get() = tempbinding!!
+    private lateinit var binding: FragmentListInsuranceApplicationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        tempbinding = FragmentListInsuranceApplicationBinding.inflate(inflater, container ,false)
+        binding = FragmentListInsuranceApplicationBinding.inflate(inflater, container ,false)
 
         loadData()
 
@@ -98,28 +97,36 @@ class ListInsuranceApplicationFragment : Fragment() {
                     insApplicationList.clear()
                     for (insuranceSnapshot in snapshot.children) {
 
-                        val insuranceApplicationID: String =
+                        val applicationID: String =
                             insuranceSnapshot.child("applicationID").value.toString()
                         val evidences: String =
                             insuranceSnapshot.child("evidences").value.toString()
-                        val insuranceAppliedDate: Date = Date(
+                        val applicationAppliedDate: Date = Date(
                             insuranceSnapshot.child("insuranceAppliedDate")
                                 .child("time").value as Long
                         )
                         val insuranceID: String =
                             insuranceSnapshot.child("insuranceID").value.toString()
-                        val insuranceReferralID: String =
+                        val referralID: String =
                             insuranceSnapshot.child("insuranceReferralID").value.toString()
                         val insuranceStatus: String =
                             insuranceSnapshot.child("insuranceStatus").value.toString()
 
                         val insApp = InsuranceApplication(
-                            insuranceApplicationID,
+                            applicationID,
                             insuranceID,
-                            insuranceReferralID,
-                            insuranceAppliedDate,
+                            referralID,
+                            applicationAppliedDate,
                             insuranceStatus,
-                            evidences
+                            false,
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            false
                         )
 
                         insApplicationList.add(insApp)
@@ -144,7 +151,7 @@ class ListInsuranceApplicationFragment : Fragment() {
 
     }
 
-    private fun insertData() {
+/*    private fun insertData() {
 
         val insAppList: List<InsuranceApplication> = listOf(
             InsuranceApplication("20210725-Etiqa-IA0001","IN001","IR001", Date("08/09/2021"),"Pending","bla"),
@@ -155,6 +162,6 @@ class ListInsuranceApplicationFragment : Fragment() {
             insuranceApplicationRef.push().setValue(insurance)
         }
 
-    }
+    }*/
 
 }

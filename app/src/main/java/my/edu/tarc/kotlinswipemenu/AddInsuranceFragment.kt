@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentAddInsuranceBinding
+import my.edu.tarc.kotlinswipemenu.functions.resetForm
 
 
 class InsuranceAddFragment : Fragment() {
@@ -23,8 +24,7 @@ class InsuranceAddFragment : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val insuranceRef = database.getReference("Insurance")
 
-    private var tempbinding: FragmentAddInsuranceBinding? = null
-    private val binding get() = tempbinding!!
+    private lateinit var binding: FragmentAddInsuranceBinding
 
     private var insuranceList = ArrayList<Insurance>()
     private var insuranceTypeList = ArrayList<String>()
@@ -35,7 +35,7 @@ class InsuranceAddFragment : Fragment() {
     ): View {
         loadData()
 
-        tempbinding = FragmentAddInsuranceBinding.inflate(inflater,  container ,false)
+        binding = FragmentAddInsuranceBinding.inflate(inflater,  container ,false)
 
         binding.btnBackAddInsurance.setOnClickListener() {
             val action = InsuranceAddFragmentDirections.actionInsuranceAddFragmentToListInsuranceFragment()
@@ -43,7 +43,7 @@ class InsuranceAddFragment : Fragment() {
         }
 
         binding.btnResetAddInsurance.setOnClickListener(){
-            resetForm(view as ViewGroup)
+            resetForm().resetAllField(view as ViewGroup)
         }
 
         binding.btnAddAddInsurance.setOnClickListener() {
@@ -169,29 +169,5 @@ class InsuranceAddFragment : Fragment() {
 
             }
         })
-    }
-
-    private fun resetForm(group: ViewGroup) {
-        var i = 0
-        val count = group.childCount
-        while (i < count) {
-            val view = group.getChildAt(i)
-            if (view is EditText) {
-                view.text.clear()
-            }
-            if (view is RadioGroup) {
-                (view.getChildAt(0) as RadioButton).isChecked = true
-            }
-            if (view is Spinner) {
-                view.setSelection(0)
-            }
-            if (view is CheckBox) {
-                if(view.isChecked) {
-                    view.toggle()
-                }
-            }
-            if (view is ViewGroup && view.childCount > 0) resetForm(view)
-            ++i
-        }
     }
 }

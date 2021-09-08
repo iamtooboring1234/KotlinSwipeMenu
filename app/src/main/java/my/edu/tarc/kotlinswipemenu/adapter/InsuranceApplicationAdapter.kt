@@ -73,9 +73,9 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:Mutable
         })
 
         holder.applicationID.text = currentItem.applicationID
-        holder.applicationStatus.text = currentItem.insuranceStatus
+        holder.applicationStatus.text = currentItem.applicationStatus
         holder.insuranceID.text = currentItem.insuranceID
-        holder.appliedDate.text = format.format(currentItem.insuranceAppliedDate)
+        holder.appliedDate.text = format.format(currentItem.applicationAppliedDate)
 
         val isExpandable : Boolean = insuranceApplicationList[position].expandable
         holder.expandableLayout.visibility = if (isExpandable) View.VISIBLE else View.GONE
@@ -86,9 +86,9 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:Mutable
             notifyItemChanged(position)
         }
 
-        if(currentItem.insuranceStatus.equals("Pending")){
+        if(currentItem.applicationStatus.equals("Pending")){
             holder.applicationStatus.setTextColor(Color.parseColor("#EC512B"))
-        } else if (currentItem.insuranceStatus.equals("Rejected")) {
+        } else if (currentItem.applicationStatus.equals("Rejected")) {
             holder.applicationStatus.setTextColor(Color.parseColor("#F30E15"))
         } else {
             holder.applicationStatus.setTextColor(Color.parseColor("#31B12C"))
