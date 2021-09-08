@@ -14,7 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentAddInsuranceBinding
-import my.edu.tarc.kotlinswipemenu.functions.resetForm
+import my.edu.tarc.kotlinswipemenu.functions.ResetForm
 
 
 class InsuranceAddFragment : Fragment() {
@@ -43,7 +43,7 @@ class InsuranceAddFragment : Fragment() {
         }
 
         binding.btnResetAddInsurance.setOnClickListener(){
-            resetForm().resetAllField(view as ViewGroup)
+            ResetForm().resetAllField(view as ViewGroup)
         }
 
         binding.btnAddAddInsurance.setOnClickListener() {

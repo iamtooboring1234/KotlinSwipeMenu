@@ -2,7 +2,7 @@ package my.edu.tarc.kotlinswipemenu.functions
 
 import com.google.firebase.auth.FirebaseAuth
 
-class checkUser() {
+class CheckUser() {
     private val auth = FirebaseAuth.getInstance()
 
     fun ifCurrentUserExists():Boolean{

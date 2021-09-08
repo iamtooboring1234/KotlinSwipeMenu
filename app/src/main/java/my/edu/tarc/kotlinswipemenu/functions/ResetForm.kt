@@ -3,7 +3,7 @@ package my.edu.tarc.kotlinswipemenu.functions
 import android.view.ViewGroup
 import android.widget.*
 
-class resetForm {
+class ResetForm {
     fun resetAllField(group: ViewGroup) {
         var i = 0
         val count = group.childCount
@@ -13,7 +13,7 @@ class resetForm {
                 view.text.clear()
             }
             if (view is RadioGroup) {
-                (view.getChildAt(0) as RadioButton).isChecked = true
+                view.clearCheck()
             }
             if (view is Spinner) {
                 view.setSelection(0)

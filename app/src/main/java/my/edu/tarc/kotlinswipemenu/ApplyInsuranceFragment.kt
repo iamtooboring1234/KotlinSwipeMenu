@@ -1,6 +1,5 @@
 package my.edu.tarc.kotlinswipemenu
 
-import android.R
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.database.Cursor
@@ -12,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.text.isDigitsOnly
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,8 +22,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import my.edu.tarc.kotlinswipemenu.adapter.UploadListAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentApplyInsuranceBinding
-import my.edu.tarc.kotlinswipemenu.functions.checkUser
-import my.edu.tarc.kotlinswipemenu.functions.resetForm
+import my.edu.tarc.kotlinswipemenu.functions.CheckUser
+import my.edu.tarc.kotlinswipemenu.functions.ResetForm
 import my.edu.tarc.kotlinswipemenu.viewModel.File
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.viewModel.InsuranceApplication
@@ -89,11 +88,16 @@ class ApplyInsuranceFragment : Fragment() {
 
         }
 
+        binding.btnBackApplyInsurance.setOnClickListener() {
+            val action = ApplyInsuranceFragmentDirections.actionApplyInsuranceFragmentToListInsuranceCustViewFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
         binding.btnApply.setOnClickListener() {
             if (checkError()) {
                 for (fileCount in 0 until fileNameList.size) {
                     fileToUpload = fileNameList[fileCount].FileName?.let { it ->
-                        checkUser().getCurrentUserUID()?.let { it1 ->
+                        CheckUser().getCurrentUserUID()?.let { it1 ->
                             mStorage.child("Evidences Insurance Application").child("User_$it1")
                                 .child(
                                     it
@@ -112,7 +116,7 @@ class ApplyInsuranceFragment : Fragment() {
         }
 
         binding.btnReset.setOnClickListener() {
-            resetForm().resetAllField(view as ViewGroup)
+            ResetForm().resetAllField(view as ViewGroup)
         }
 
         return binding.root
@@ -191,7 +195,7 @@ class ApplyInsuranceFragment : Fragment() {
                 val newInsApp = InsuranceApplication(
                     newID,
                     args.insuranceID,
-                    checkUser().getCurrentUserUID(),
+                    CheckUser().getCurrentUserUID(),
                     Date(),
                     "Pending",
                     true,

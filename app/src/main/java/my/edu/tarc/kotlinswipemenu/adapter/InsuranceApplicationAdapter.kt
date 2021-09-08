@@ -21,7 +21,7 @@ private var tempInsList = ArrayList<Insurance>()
 private val database = FirebaseDatabase.getInstance()
 private val insuranceRef = database.getReference("Insurance")
 
-class InsuranceApplicationAdapter (internal var insuranceApplicationList:MutableList<InsuranceApplication>, val clickListener: ViewListener) :
+class InsuranceApplicationAdapter (internal var insuranceApplicationList:List<InsuranceApplication>, val clickListener: ViewListener) :
     RecyclerView.Adapter<InsuranceApplicationAdapter.myViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {

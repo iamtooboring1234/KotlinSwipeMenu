@@ -93,10 +93,10 @@
         android:label="ListInsuranceCustViewFragment"
         tools:layout="@layout/fragment_list_insurance_cust_view">
         <action
-            android:id="@+id/action_listInsuranceCustViewFragment_to_navigationFragment"
-            app:destination="@id/navigationFragment" />
-        <action
             android:id="@+id/action_listInsuranceCustViewFragment_to_applyInsuranceFragment"
             app:destination="@id/applyInsuranceFragment" />
+        <action
+            android:id="@+id/action_listInsuranceCustViewFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
     </fragment>
 </navigation>

@@ -52,6 +52,11 @@ class ListInsuranceCustViewFragment : Fragment() {
 
         })
 
+        binding.btnBackListInsuranceCustView.setOnClickListener() {
+            val action = ListInsuranceCustViewFragmentDirections.actionListInsuranceCustViewFragmentToNavigationFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
         binding.searchInsurance.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true

@@ -96,7 +96,7 @@
                 android:layout_marginEnd="8dp"
                 android:iconifiedByDefault="false"
                 android:queryHint="Enter Insurance ID"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnApplicationListFilter"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout8" />
 
@@ -109,8 +109,72 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchApplication"
+                app:layout_constraintTop_toBottomOf="@+id/filterLayout"
                 tools:listitem="@layout/insurance_application_layout" />
+
+            <ImageView
+                android:id="@+id/btnApplicationListFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/rounded_background_primary"
+                android:padding="7dp"
+                app:srcCompat="@drawable/ic_baseline_filter_alt_24"
+                app:layout_constraintBottom_toBottomOf="@+id/searchApplication"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchApplication" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/filterLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchApplication">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/applicationTabLayout"
+                    android:layout_width="393dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tiAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tiPending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pending"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tiAccepted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accept"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tiRejected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reject"
+                        android:textSize="12sp" />
+                </com.google.android.material.tabs.TabLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
