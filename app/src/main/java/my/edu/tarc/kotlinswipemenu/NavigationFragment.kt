@@ -25,13 +25,14 @@ class NavigationFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
         binding.btnToApply.setOnClickListener() {
-            val action = NavigationFragmentDirections.actionNavigationFragmentToApplyInsuranceFragment()
+            val action = NavigationFragmentDirections.actionNavigationFragmentToListInsuranceCustViewFragment()
             Navigation.findNavController(it).navigate(action)
         }
         binding.btnToList.setOnClickListener() {
             val action = NavigationFragmentDirections.actionNavigationFragmentToListInsuranceFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
 
 
 

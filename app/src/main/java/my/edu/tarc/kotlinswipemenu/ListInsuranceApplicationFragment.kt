@@ -75,15 +75,10 @@ class ListInsuranceApplicationFragment : Fragment() {
                         Toast.makeText(context, "hi", Toast.LENGTH_LONG).show()
 
                     })
+
                     binding.rvInsApplication.adapter = adapterInsApp
-
                     binding.rvInsApplication.adapter!!.notifyDataSetChanged()
 
-                } else {
-                    tempInsApplicationList.clear()
-                    tempInsApplicationList.addAll(insApplicationList)
-
-                    binding.rvInsApplication.adapter!!.notifyDataSetChanged()
                 }
 
                 return true

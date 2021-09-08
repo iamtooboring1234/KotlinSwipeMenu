@@ -1,5 +1,6 @@
 package my.edu.tarc.kotlinswipemenu.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,13 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:Mutable
             notifyItemChanged(position)
         }
 
+        if(currentItem.insuranceStatus.equals("Pending")){
+            holder.applicationStatus.setTextColor(Color.parseColor("#EC512B"))
+        } else if (currentItem.insuranceStatus.equals("Rejected")) {
+            holder.applicationStatus.setTextColor(Color.parseColor("#F30E15"))
+        } else {
+            holder.applicationStatus.setTextColor(Color.parseColor("#31B12C"))
+        }
 
         holder.bind(currentItem!!, clickListener)
     }
@@ -126,6 +134,8 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:Mutable
         fun onClick(item: InsuranceApplication) =
             clickListener(item.applicationID!!, item.insuranceID!!)
     }
+
+
 
 }
 
