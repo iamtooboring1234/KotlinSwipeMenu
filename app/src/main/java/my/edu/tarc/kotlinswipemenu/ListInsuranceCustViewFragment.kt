@@ -1,5 +1,6 @@
 package my.edu.tarc.kotlinswipemenu
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import my.edu.tarc.kotlinswipemenu.Helper.MyLottie
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceCustAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentListInsuranceCustViewBinding
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
@@ -28,27 +30,27 @@ class ListInsuranceCustViewFragment : Fragment() {
     private var insuranceList = ArrayList<Insurance>()
     private var tempinsuranceList = ArrayList<Insurance>()
 
-    private var tempbinding: FragmentListInsuranceCustViewBinding? = null
-    private val binding get() = tempbinding!!
+    private lateinit var binding: FragmentListInsuranceCustViewBinding
 
-    private var dialog = LoadingDialogFragment()
+    private var loadingDialog: Dialog?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        tempbinding = FragmentListInsuranceCustViewBinding.inflate(inflater,  container ,false)
+
+        binding = FragmentListInsuranceCustViewBinding.inflate(inflater,  container ,false)
 
         binding.rvListInsuranceCust.setHasFixedSize(true)
 
         insCustAdapter = InsuranceCustAdapter(insuranceList, InsuranceCustAdapter.ApplyListener{
                 insuranceID ->val it = view
-
-            showProgressBar()
-
-            val action = ListInsuranceCustViewFragmentDirections.actionListInsuranceCustViewFragmentToApplyInsuranceFragment(insuranceID)
-            view?.let { Navigation.findNavController(it).navigate(action) }
+            showLoading()
+            Handler().postDelayed({
+                hideLoading()
+                val action = ListInsuranceCustViewFragmentDirections.actionListInsuranceCustViewFragmentToApplyInsuranceFragment(insuranceID)
+                view?.let { Navigation.findNavController(it).navigate(action) }
+            }, 3000)
 
         })
 
@@ -123,16 +125,11 @@ class ListInsuranceCustViewFragment : Fragment() {
                     }
 
                     tempinsuranceList.addAll(insuranceList)
-                    //binding.shimmerViewContainer.stopShimmer()
-                    //binding.shimmerViewContainer.visibility = View.GONE
+                    binding.shimmerViewContainer.stopShimmer()
+                    binding.shimmerViewContainer.visibility = View.GONE
                     binding.rvListInsuranceCust.visibility = View.VISIBLE
                     binding.rvListInsuranceCust.adapter?.notifyDataSetChanged()
 
-                } else {
-                    insuranceList.clear()
-                    tempinsuranceList.clear()
-                    binding.rvListInsuranceCust.visibility = View.INVISIBLE
-                    binding.rvListInsuranceCust.adapter?.notifyDataSetChanged()
                 }
             }
 
@@ -143,8 +140,13 @@ class ListInsuranceCustViewFragment : Fragment() {
 
     }
 
-    private fun showProgressBar(){
-        dialog.show(getChildFragmentManager(), "loadingDialog")
+    private fun hideLoading() {
+        loadingDialog?.let { if(it.isShowing) it.cancel() }
+    }
+
+    private fun showLoading() {
+        hideLoading()
+        loadingDialog = MyLottie.showLoadingDialog(requireContext())
     }
 
 }

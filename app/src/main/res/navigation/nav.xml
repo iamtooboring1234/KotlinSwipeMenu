@@ -68,6 +68,9 @@
             android:name="insuranceID"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_applyInsuranceFragment_to_appliedSuccessfulFragment"
+            app:destination="@id/appliedSuccessfulFragment" />
     </fragment>
     <fragment
         android:id="@+id/listInsuranceApplicationFragment"
@@ -77,6 +80,9 @@
         <action
             android:id="@+id/action_listInsuranceApplicationFragment_to_navigationFragment"
             app:destination="@id/navigationFragment" />
+        <action
+            android:id="@+id/action_listInsuranceApplicationFragment_to_updateInsuranceApplicationFragment"
+            app:destination="@id/updateInsuranceApplicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLoginFragment"
@@ -98,5 +104,31 @@
         <action
             android:id="@+id/action_listInsuranceCustViewFragment_to_navigationFragment"
             app:destination="@id/navigationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appliedSuccessfulFragment"
+        android:name="my.edu.tarc.kotlinswipemenu.AppliedSuccessfulFragment"
+        android:label="fragment_applied_successful"
+        tools:layout="@layout/fragment_applied_successful" >
+        <action
+            android:id="@+id/action_appliedSuccessfulFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateInsuranceApplicationFragment"
+        android:name="my.edu.tarc.kotlinswipemenu.UpdateInsuranceApplicationFragment"
+        android:label="UpdateInsuranceApplicationFragment"
+        tools:layout="@layout/fragment_update_insurance_application">
+        <action
+            android:id="@+id/action_updateInsuranceApplicationFragment_to_listInsuranceApplicationFragment"
+            app:destination="@id/listInsuranceApplicationFragment" />
+        <argument
+            android:name="applicationID"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="insuranceID"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

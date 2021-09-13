@@ -1,16 +1,18 @@
 package my.edu.tarc.kotlinswipemenu
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceApplicationAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentListInsuranceApplicationBinding
 import my.edu.tarc.kotlinswipemenu.viewModel.InsuranceApplication
@@ -23,17 +25,19 @@ class ListInsuranceApplicationFragment : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val insuranceApplicationRef = database.getReference("InsuranceApplication")
 
-    lateinit var adapterInsApp : InsuranceApplicationAdapter
+    private lateinit var adapterInsApp : InsuranceApplicationAdapter
 
     private var insApplicationList = ArrayList<InsuranceApplication>()
     private var tempInsApplicationList = ArrayList<InsuranceApplication>()
 
     private lateinit var binding: FragmentListInsuranceApplicationBinding
 
+    private var dialog = LoadingDialogFragment()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentListInsuranceApplicationBinding.inflate(inflater, container ,false)
 
@@ -46,12 +50,7 @@ class ListInsuranceApplicationFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
 
-        adapterInsApp = InsuranceApplicationAdapter(insApplicationList, InsuranceApplicationAdapter.ViewListener{
-                applicationID,insuranceID ->val it = view
-
-            Toast.makeText(context, "hi", Toast.LENGTH_LONG).show()
-
-        })
+        changeView(insApplicationList)
 
         binding.searchApplication.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(newText: String?): Boolean {
@@ -98,12 +97,15 @@ class ListInsuranceApplicationFragment : Fragment() {
                             }
                             1 -> {
                                 selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Pending"} as ArrayList<InsuranceApplication>
+                                selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
                             }
                             2 -> {
                                 selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Accepted"} as ArrayList<InsuranceApplication>
+                                selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
                             }
                             3 -> {
                                 selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Rejected"} as ArrayList<InsuranceApplication>
+                                selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
                             }
                         }
 
@@ -141,8 +143,6 @@ class ListInsuranceApplicationFragment : Fragment() {
 
                         val applicationID: String =
                             insuranceSnapshot.child("applicationID").value.toString()
-                        val evidences: String =
-                            insuranceSnapshot.child("evidences").value.toString()
                         val applicationAppliedDate: Date = Date(
                             insuranceSnapshot.child("applicationAppliedDate")
                                 .child("time").value as Long
@@ -173,7 +173,7 @@ class ListInsuranceApplicationFragment : Fragment() {
 
                         insApplicationList.add(insApp)
                     }
-
+                    binding.tvNoRecordFound.visibility = View.GONE
                     binding.shimmerViewContainer.stopShimmer()
                     binding.shimmerViewContainer.visibility = View.GONE
                     binding.rvInsApplication.visibility = View.VISIBLE
@@ -181,6 +181,9 @@ class ListInsuranceApplicationFragment : Fragment() {
 
                 } else {
                     insApplicationList.clear()
+                    binding.shimmerViewContainer.stopShimmer()
+                    binding.shimmerViewContainer.visibility = View.GONE
+                    binding.tvNoRecordFound.visibility = View.VISIBLE
                     binding.rvInsApplication.visibility = View.INVISIBLE
                     binding.rvInsApplication.adapter?.notifyDataSetChanged()
                 }
@@ -197,12 +200,19 @@ class ListInsuranceApplicationFragment : Fragment() {
         adapterInsApp = InsuranceApplicationAdapter(insuranceApplicationList, InsuranceApplicationAdapter.ViewListener{
                 applicationID,insuranceID -> val it = view
 
-            Toast.makeText(context, "hi", Toast.LENGTH_LONG).show()
+            showProgressBar()
+
+            val action = ListInsuranceApplicationFragmentDirections.actionListInsuranceApplicationFragmentToUpdateInsuranceApplicationFragment(applicationID, insuranceID)
+            view?.let { Navigation.findNavController(it).navigate(action) }
 
         })
 
         binding.rvInsApplication.adapter = adapterInsApp
         binding.rvInsApplication.adapter!!.notifyDataSetChanged()
+    }
+
+    private fun showProgressBar(){
+        dialog.show(getChildFragmentManager(), "loadingDialog")
     }
 
 /*    private fun insertData() {

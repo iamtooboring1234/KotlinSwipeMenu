@@ -1,10 +1,12 @@
 package my.edu.tarc.kotlinswipemenu
 
 import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
@@ -49,10 +51,16 @@ class ApplyInsuranceFragment : Fragment() {
 
     private val args: ApplyInsuranceFragmentArgs by navArgs()
 
+    private lateinit var progressDialog : ProgressDialog
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
+        progressDialog = ProgressDialog(this.context)
+        progressDialog.setMessage("Applying the insurance..")
+        progressDialog.setCancelable(false)
 
         binding = FragmentApplyInsuranceBinding.inflate(inflater,  container ,false)
 
@@ -79,7 +87,7 @@ class ApplyInsuranceFragment : Fragment() {
 
         binding.btnUpload.setOnClickListener() {
 
-            val filesIntent: Intent = Intent(Intent.ACTION_GET_CONTENT)
+            val filesIntent = Intent(Intent.ACTION_GET_CONTENT)
             filesIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             filesIntent.addCategory(Intent.CATEGORY_OPENABLE)
             filesIntent.type = "*/*"
@@ -95,27 +103,24 @@ class ApplyInsuranceFragment : Fragment() {
 
         binding.btnApply.setOnClickListener() {
             if (checkError()) {
-                for (fileCount in 0 until fileNameList.size) {
-                    fileToUpload = fileNameList[fileCount].FileName?.let { it ->
-                        CheckUser().getCurrentUserUID()?.let { it1 ->
-                            mStorage.child("Evidences Insurance Application").child("User_$it1")
-                                .child(
-                                    it
-                                )
-                        }
-                    }!!
-
-                    fileNameList[fileCount].FileUri?.let { it ->
-                        fileToUpload.putFile(it).addOnSuccessListener {
-                            Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+                progressDialog.show()
                 addInsuranceApplication()
+                val progressRunnable = Runnable { progressDialog.dismiss()
+                    Toast.makeText(context, "Applied Successfully.", Toast.LENGTH_SHORT).show()
+                    val action = ApplyInsuranceFragmentDirections.actionApplyInsuranceFragmentToAppliedSuccessfulFragment()
+                    Navigation.findNavController(it).navigate(action)
+                }
+
+                val handler = Handler()
+                handler.postDelayed(progressRunnable, 3000)
+            } else {
+                Toast.makeText(context, "Please fill in all the required details.", Toast.LENGTH_LONG).show()
             }
         }
 
         binding.btnReset.setOnClickListener() {
+            fileNameList.clear()
+            fileAdapter.notifyDataSetChanged()
             ResetForm().resetAllField(view as ViewGroup)
         }
 
@@ -171,7 +176,7 @@ class ApplyInsuranceFragment : Fragment() {
     }
 
     private fun addInsuranceApplication() {
-        var newID:String = ""
+        var newID : String = ""
         val sdfID = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         insuranceApplicationRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -192,37 +197,57 @@ class ApplyInsuranceFragment : Fragment() {
                 val rbAntiLockBrake: RadioButton =
                     binding.radGrpAntiLockBrake.findViewById(binding.radGrpAntiLockBrake.checkedRadioButtonId)
 
+                var isEvidences : Boolean = false
+
+                if (fileNameList.size > 0) {
+                    isEvidences = true
+                }
+
                 val newInsApp = InsuranceApplication(
                     newID,
                     args.insuranceID,
                     CheckUser().getCurrentUserUID(),
                     Date(),
                     "Pending",
-                    true,
-                    binding.tfCarNoPlate.toString(),
-                    binding.tfYearMake.toString(),
-                    binding.tfModelName.toString(),
-                    binding.tfMileage.toString(),
+                    isEvidences,
+                    binding.tfCarNoPlate.text.toString(),
+                    binding.tfYearMake.text.toString(),
+                    binding.tfModelName.text.toString(),
+                    binding.tfMileage.text.toString(),
                     rbUsage.text.toString(),
                     rbAirBag.text.toString(),
                     rbAntiLockBrake.text.toString()
                 )
 
                 insuranceApplicationRef.push().setValue(newInsApp).addOnSuccessListener() {
-                    Toast.makeText(context, "Add successful", Toast.LENGTH_LONG).show()
+
                 }.addOnFailureListener {
-                    Toast.makeText(context, "Add unsuccessful", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Add Unsuccessful.", Toast.LENGTH_LONG).show()
                 }
 
+                for (fileCount in 0 until fileNameList.size) {
+                    fileToUpload = fileNameList[fileCount].FileName?.let { it ->
+                        CheckUser().getCurrentUserUID()?.let { it1 ->
+                            mStorage.child("Evidences Insurance Application").child("User_$it1").child(newID)
+                                .child(
+                                    it
+                                )
+                        }
+                    }!!
+
+                    fileNameList[fileCount].FileUri?.let { it ->
+                        fileToUpload.putFile(it).addOnSuccessListener {
+
+                        }
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
-
         })
     }
-
 
     private fun getFileName(uri: Uri): String {
         var result: String? = null
@@ -282,17 +307,17 @@ class ApplyInsuranceFragment : Fragment() {
                     }
 
                     for (insCustList in insuranceCustList) {
-                        binding.tvCustInsuranceName.setText(insCustList.insuranceName)
-                        binding.tvCustInsuranceComp.setText(insCustList.insuranceComp)
-                        binding.tvCustInsurancePlan.setText(insCustList.insurancePlan)
-                        binding.tvCustInsuranceType.setText(insCustList.insuranceType)
+                        binding.tvCustInsuranceName.text = insCustList.insuranceName
+                        binding.tvCustInsuranceComp.text = insCustList.insuranceComp
+                        binding.tvCustInsurancePlan.text = insCustList.insurancePlan
+                        binding.tvCustInsuranceType.text = insCustList.insuranceType
 
                         var strCover : String? = ""
                         for (insCover in insCustList.insuranceCoverage!!) {
                             strCover += "$insCover,\n"
                         }
 
-                        binding.tvCustInsuranceCoverage.setText(strCover)
+                        binding.tvCustInsuranceCoverage.text = strCover
                     }
 
                 } else {

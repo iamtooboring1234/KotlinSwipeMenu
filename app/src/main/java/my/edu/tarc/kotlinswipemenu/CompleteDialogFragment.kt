@@ -5,15 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import com.airbnb.lottie.LottieAnimationView
 
-class InsuranceApplicationDetailsFragment : Fragment() {
+class CompleteDialogFragment : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_insurance_application_details, container, false)
+        var rootView:View = inflater.inflate(R.layout.fragment_complete_dialog,container,false)
+
+        return rootView
     }
 
 }

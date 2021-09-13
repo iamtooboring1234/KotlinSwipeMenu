@@ -1,90 +1,14 @@
 <resources>
     <string name="app_name">KotlinSwipeMenu</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string-array name="insurance_plan">
-        <item>Motor Insurance</item>
-        <item>Car Insurance</item>
-        <item>Van Insurance</item>
-        <item>Lorry Insurance</item>
-    </string-array>
-    <string name="pending">Pending</string>
-    <string name="Accepted">Accepted</string>
-    <string name="Rejected">Rejected</string>
     <string name="textview">TextView</string>
-    <string name="insurance_claim_form">Insurance Claim Form</string>
-    <string name="insurance_claim_details">Insurance Claim Details</string>
-    <string name="renew_details">Renew Details</string>
-    <string name="payment_details">Payment Details</string>
-    <string name="payment_method">Payment method</string>
-    <string name="bank_details">Bank details</string>
-    <string name="card_details">Card details</string>
-    <string name="fill_in_info">Please fill in the correct information</string>
-    <string name="upload_image">Upload image</string>
-    <string name="claim_success_msg">Your claim is successfully created and waiting to be approved. Please check for the updates at the claim listing page</string>
-    <string name="claim_accepted_msg">The claim is accepted. An email will be sent to the referral. </string>
-    <string name="claim_rejected_msg">The claim is rejected. An email will be sent to the referral. </string>
-    <string name="renew_success_msg">You have successfully renewed your insurance.</string>
-    <string name="payment_method_details">Please choose your payment method</string>
-    <string name="bank_payment_details">Please choose the bank to pay</string>
-    <string name="card_payment_details">Please enter your card details</string>
-    <string name="referral_details">Referral details</string>
-    <string name="approve_claim_amount">Approve claim amount</string>
-    <string name="claim_desc_hint">Type in claim description here</string>
-    <string name="claim_amount_hint">Type in claim amount here</string>
-    <string-array name="payment_method_array">
-        <item>Online banking</item>
-        <item>Credit / debit card</item>
-    </string-array>
-    <string-array name="bank_selection_array">
-        <item>Public Bank</item>
-        <item>Hong Leong Bank</item>
-    </string-array>
-    <string name="get_started">Get Started</string>
-    <string name="dashboard">Dashboard</string>
-    <string name="description_text">Description Text</string>
-    <string name="title">Title</string>
-    <string name="image">image</string>
 
     <!-- Reward (Jiho) -->
-    <string name="RewardRedeemSuccessful">Your reward is pending to delivery.
-        You may receive the reward
-        between 2 week after the apply date.</string>
-    <string name="your_insurance_is_applied_successfully">Your insurance is applied successfully.</string>
 
 
     <!-- krysty -->
-    <string name="type_referral_name_here">type referral name here</string>
-    <string name="search">Search</string>
-    <string name="enter_referral_name">Enter Referral Name ：</string>
-    <string name="referral_status">Referral Status :</string>
-    <string name="referral_listings">Referral Listings</string>
-    <string name="inviter_s_name">Inviter Name :</string>
-    <string name="personal_details">Personal Details</string>
-    <string name="who_invited_you">Who Invited You ?</string>
-    <string name="full_name">Full Name</string>
-    <string name="gender">Gender</string>
-    <string name="nric">NRIC</string>
     <string name="email">Email</string>
-    <string name="address">Address</string>
-    <string name="contact_no">Contact No.</string>
-    <string name="register">Register</string>
     <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="username">Username</string>
-    <string name="login_details">Login Details</string>
-    <string name="total_points_earned">Total Points Earned</string>
-    <string name="redeem_rewards">Redeem Rewards</string>
-    <string name="share_your_referral_code_to_you_friends_to_obtain_additional_rewards_points">Share your referral code to you friends to obtain additional rewards points</string>
-    <string name="invite_friends">Invite Friends</string>
-    <string name="box_invite">box_invite</string>
-    <string name="diamond">diamond</string>
-    <string name="star">star</string>
-    <string name="user_profile">user_profile</string>
     <string name="login">Login</string>
-    <string name="copy_link">Copy link</string>
-    <string name="share_via">Share via</string>
-    <string name="share">Share</string>
-    <string name="registerSuccessMsg">You have successfully registered a new account. Please check your email to verify the account. You can login to the account after the verification.</string>
     <string name="other">Other</string>
     <string name="_4_wheel_standard">4 Wheel Standard</string>
     <string name="_4_wheel">4 Wheel</string>

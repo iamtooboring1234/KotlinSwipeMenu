@@ -34,17 +34,18 @@ class ListInsuranceFragment : Fragment() {
     private var insuranceList = ArrayList<Insurance>()
     private var tempinsuranceList = ArrayList<Insurance>()
 
-    private var tempbinding: FragmentListInsuranceBinding? = null
-    private val binding get() = tempbinding!!
+    private lateinit var binding : FragmentListInsuranceBinding
 
     private var strMsg:String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        tempbinding = FragmentListInsuranceBinding.inflate(inflater,  container ,false)
+        binding = FragmentListInsuranceBinding.inflate(inflater,  container ,false)
+
+        binding.shimmerViewContainer.startShimmer()
 
         binding.rvInsuranceList.setHasFixedSize(true)
 

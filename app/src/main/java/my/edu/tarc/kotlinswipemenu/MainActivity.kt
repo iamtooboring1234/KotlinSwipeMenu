@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var adapter : InsuranceAdapter
     lateinit var layoutManager: LinearLayoutManager
-    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

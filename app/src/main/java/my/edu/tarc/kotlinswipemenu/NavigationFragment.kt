@@ -1,12 +1,15 @@
 package my.edu.tarc.kotlinswipemenu
 
+import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
+import my.edu.tarc.kotlinswipemenu.Helper.MyLottie
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentNavigationBinding
 
 class NavigationFragment : Fragment() {
@@ -16,6 +19,8 @@ class NavigationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+
 
         val binding: FragmentNavigationBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_navigation, container, false)
@@ -35,8 +40,8 @@ class NavigationFragment : Fragment() {
 
 
 
-
         return binding.root
     }
+
 
 }
