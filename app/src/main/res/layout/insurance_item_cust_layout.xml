@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -52,7 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:text="Insurance Name"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:text="Insurance Plan"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +75,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:text="Insurance Type"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -88,24 +87,53 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imgRewardIcon"
                 app:layout_constraintTop_toBottomOf="@+id/tvCustInsuranceType" />
 
+            <TextView
+                android:id="@+id/tvCustInsuranceCoverage1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:text="RM"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/imgRewardIcon"
+                app:layout_constraintTop_toBottomOf="@+id/tvCustInsuranceCoverage" />
+
+            <TextView
+                android:id="@+id/tvCustInsurancePrice2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toEndOf="@+id/tvCustInsuranceCoverage1"
+                app:layout_constraintTop_toTopOf="@+id/tvCustInsuranceCoverage1" />
+
+            <TextView
+                android:id="@+id/tvCustInsurancePrice3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="per month"
+                app:layout_constraintStart_toEndOf="@+id/tvCustInsurancePrice2"
+                app:layout_constraintTop_toBottomOf="@+id/tvCustInsuranceCoverage" />
+
             <Button
                 android:id="@+id/btnCustApply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{() -> ApplyListener.onClick(Insurance)}"
                 android:text="Apply"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCustInsuranceCoverage"
-                android:onClick="@{() -> ApplyListener.onClick(Insurance)}"/>
+                app:layout_constraintTop_toBottomOf="@+id/tvCustInsurancePrice3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

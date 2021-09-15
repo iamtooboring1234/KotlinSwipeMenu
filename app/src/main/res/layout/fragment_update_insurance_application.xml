@@ -26,7 +26,7 @@
             app:layout_constraintVertical_bias="0.0">
 
             <ImageView
-                android:id="@+id/btnBackApplyInsurance"
+                android:id="@+id/btnBackUpdateInsuranceApplication"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -306,7 +306,6 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/custom_input_textbox"
                 android:ems="10"
-                android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:hint="Eg. 2001"
                 android:inputType="textPersonName"
@@ -327,7 +326,6 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/custom_input_textbox"
                 android:ems="10"
-                android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:hint="Eg. Toyota Vios 1.5A"
                 android:inputType="textPersonName"
@@ -348,7 +346,6 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/custom_input_textbox"
                 android:ems="10"
-                android:enabled="false"
                 android:focusableInTouchMode="false"
                 android:hint="Eg. 999999"
                 android:inputType="textPersonName"
@@ -405,28 +402,28 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView8">
 
                 <RadioButton
-                    android:id="@+id/radioButton5"
+                    android:id="@+id/radUsageBusiness"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/business" />
 
                 <RadioButton
-                    android:id="@+id/radioButton6"
+                    android:id="@+id/radUsageCarpool"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/carpool" />
 
                 <RadioButton
-                    android:id="@+id/radioButton7"
+                    android:id="@+id/radUsagePersonal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/personal" />
 
                 <RadioButton
-                    android:id="@+id/radioButton12"
+                    android:id="@+id/radUsageOther"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -444,28 +441,28 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView11">
 
                 <RadioButton
-                    android:id="@+id/radioButton8"
+                    android:id="@+id/radAntiLockBrakeNone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/none" />
 
                 <RadioButton
-                    android:id="@+id/radioButton10"
+                    android:id="@+id/radAntiLockBrakeFourWheel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/_4_wheel" />
 
                 <RadioButton
-                    android:id="@+id/radioButton9"
+                    android:id="@+id/radAntiLockBrakeFourWheelStandard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/_4_wheel_standard" />
 
                 <RadioButton
-                    android:id="@+id/radioButton11"
+                    android:id="@+id/radAntiLockBrakeOther"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"

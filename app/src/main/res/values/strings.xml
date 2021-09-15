@@ -1,9 +1,21 @@
 <resources>
     <string name="app_name">KotlinSwipeMenu</string>
     <string name="textview">TextView</string>
+    <string-array name="insurance_type">
+        <item>Act Cover</item>
+        <item>Comprehensive Cover</item>
+        <item>Third-Party Cover</item>
+        <item>Third Party, Fire &amp; Theft Cover</item>
+    </string-array>
+    <string-array name="insurance_comp">
+        <item>AIA</item>
+        <item>Allianz</item>
+        <item>Etiqa</item>
+        <item>Great Eastern</item>
+        <item>Prudential</item>
+    </string-array>
 
     <!-- Reward (Jiho) -->
-
 
     <!-- krysty -->
     <string name="email">Email</string>

@@ -70,7 +70,7 @@ class ListInsuranceCustViewFragment : Fragment() {
                     tempinsuranceList.clear()
                     val search = newText.lowercase(Locale.getDefault())
                     for (insurance in insuranceList) {
-                        val combineText = insurance.insuranceName
+                        val combineText = insurance.insuranceComp
                         if (combineText?.lowercase(Locale.getDefault())?.contains(search) == true) {
                             tempinsuranceList.add(insurance)
                         }
@@ -117,8 +117,9 @@ class ListInsuranceCustViewFragment : Fragment() {
                         for(child in insuranceSnapshot.child("insuranceCoverage").children){
                             insuranceCoverage.add(child.value.toString())
                         }
+                        val insurancePrice: String = insuranceSnapshot.child("insurancePrice").value.toString()
 
-                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage)
+                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage, insurancePrice.toDouble())
 
                         insuranceList.add(insurance)
 

@@ -60,10 +60,16 @@ class ListInsuranceApplicationFragment : Fragment() {
                     for (insurance in insApplicationList) {
                         val combineText = insurance.applicationID
                         if (combineText?.lowercase(Locale.getDefault())?.contains(search) == true) {
-                            tempInsApplicationList.add(insurance)
+                            if(binding.applicationTabLayout.getTabAt(binding.applicationTabLayout.selectedTabPosition)?.text == insurance.applicationStatus) {
+                                tempInsApplicationList.add(insurance)
+                            } else if (binding.applicationTabLayout.getTabAt(binding.applicationTabLayout.selectedTabPosition)?.text == "All") {
+                                tempInsApplicationList.add(insurance)
+                            }
                         }
                     }
                     changeView(tempInsApplicationList)
+                } else {
+                    changeView(insApplicationList)
                 }
                 return true
             }
@@ -75,10 +81,16 @@ class ListInsuranceApplicationFragment : Fragment() {
                     for (insurance in insApplicationList) {
                         val combineText = insurance.applicationID
                         if (combineText?.lowercase(Locale.getDefault())?.contains(search) == true) {
-                            tempInsApplicationList.add(insurance)
+                            if(binding.applicationTabLayout.getTabAt(binding.applicationTabLayout.selectedTabPosition)?.text == insurance.applicationStatus) {
+                                tempInsApplicationList.add(insurance)
+                            } else if (binding.applicationTabLayout.getTabAt(binding.applicationTabLayout.selectedTabPosition)?.text == "All") {
+                                tempInsApplicationList.add(insurance)
+                            }
                         }
                     }
                     changeView(tempInsApplicationList)
+                } else {
+                    changeView(insApplicationList)
                 }
                 return true
             }
@@ -93,6 +105,8 @@ class ListInsuranceApplicationFragment : Fragment() {
                         var selectedApplication : ArrayList<InsuranceApplication> = ArrayList<InsuranceApplication>()
                         when (tab?.position) {
                             0 -> {
+                                binding.searchApplication.setQuery("", false)
+                                binding.searchApplication.clearFocus()
                                 selectedApplication = insApplicationList
                             }
                             1 -> {
@@ -118,7 +132,8 @@ class ListInsuranceApplicationFragment : Fragment() {
                     }
 
                     override fun onTabReselected(tab: TabLayout.Tab?) {
-
+                        binding.searchApplication.setQuery("", false)
+                        binding.searchApplication.clearFocus()
                     }
 
                 })
@@ -213,6 +228,51 @@ class ListInsuranceApplicationFragment : Fragment() {
 
     private fun showProgressBar(){
         dialog.show(getChildFragmentManager(), "loadingDialog")
+    }
+
+    private fun filterInsuranceAppList(insuranceApplicationList: List<InsuranceApplication>) {
+        if(binding.filterLayout.visibility == View.VISIBLE){
+
+            binding.applicationTabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    var selectedApplication : ArrayList<InsuranceApplication> = ArrayList<InsuranceApplication>()
+                    when (tab?.position) {
+                        0 -> {
+                            binding.searchApplication.setQuery("", false)
+                            binding.searchApplication.clearFocus()
+                            selectedApplication = insApplicationList
+                        }
+                        1 -> {
+                            selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Pending"} as ArrayList<InsuranceApplication>
+                            selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
+                        }
+                        2 -> {
+                            selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Accepted"} as ArrayList<InsuranceApplication>
+                            selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
+                        }
+                        3 -> {
+                            selectedApplication = insApplicationList.filter{ s -> s.applicationStatus == "Rejected"} as ArrayList<InsuranceApplication>
+                            selectedApplication = selectedApplication.filter{ s -> s.applicationID!!.contains(binding.searchApplication.query.toString())} as ArrayList<InsuranceApplication>
+                        }
+                    }
+
+                    changeView(selectedApplication)
+
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+
+                }
+
+            })
+
+        } else  {
+            binding.filterLayout.visibility = View.GONE
+        }
     }
 
 /*    private fun insertData() {

@@ -220,26 +220,24 @@ class ApplyInsuranceFragment : Fragment() {
                 )
 
                 insuranceApplicationRef.push().setValue(newInsApp).addOnSuccessListener() {
+                    for (fileCount in 0 until fileNameList.size) {
+                        fileToUpload = fileNameList[fileCount].FileName?.let { it ->
+                            CheckUser().getCurrentUserUID()?.let { it1 ->
+                                mStorage.child("Evidences Insurance Application").child("User_$it1").child(newID)
+                                    .child(
+                                        it
+                                    )
+                            }
+                        }!!
 
-                }.addOnFailureListener {
-                    Toast.makeText(context, "Add Unsuccessful.", Toast.LENGTH_LONG).show()
-                }
+                        fileNameList[fileCount].FileUri?.let { it ->
+                            fileToUpload.putFile(it).addOnSuccessListener {
 
-                for (fileCount in 0 until fileNameList.size) {
-                    fileToUpload = fileNameList[fileCount].FileName?.let { it ->
-                        CheckUser().getCurrentUserUID()?.let { it1 ->
-                            mStorage.child("Evidences Insurance Application").child("User_$it1").child(newID)
-                                .child(
-                                    it
-                                )
-                        }
-                    }!!
-
-                    fileNameList[fileCount].FileUri?.let { it ->
-                        fileToUpload.putFile(it).addOnSuccessListener {
-
+                            }
                         }
                     }
+                }.addOnFailureListener {
+                    Toast.makeText(context, "Add Unsuccessful.", Toast.LENGTH_LONG).show()
                 }
             }
 

@@ -1,7 +1,9 @@
 package my.edu.tarc.kotlinswipemenu
 
 import android.R
+import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import my.edu.tarc.kotlinswipemenu.Helper.MyLottie
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentUpdateInsuranceBinding
@@ -32,6 +35,8 @@ class UpdateInsuranceFragment : Fragment() {
 
     private var insuranceID: String? = ""
     private val args: UpdateInsuranceFragmentArgs by navArgs()
+
+    private var loadingDialog: Dialog?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,8 +82,9 @@ class UpdateInsuranceFragment : Fragment() {
                         for(child in insuranceSnapshot.child("insuranceCoverage").children){
                             insuranceCoverage.add(child.value.toString())
                         }
+                        val insurancePrice:String = insuranceSnapshot.child("insurancePrice").value.toString()
 
-                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage)
+                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage, insurancePrice.toDouble())
 
                         insuranceList.add(insurance)
                     }
@@ -164,6 +170,7 @@ class UpdateInsuranceFragment : Fragment() {
                                 it
                             )
                         }
+                        binding.tfUpdateInsurancePrice.setText(ds.insurancePrice.toString())
 
                     }
                 }
@@ -209,29 +216,37 @@ class UpdateInsuranceFragment : Fragment() {
         if(binding.cbPropertyDmg.isChecked){
             insuranceCoverage.add(binding.cbPropertyDmg.text.toString())
         }
+        val insurancePrice:Double = binding.tfUpdateInsurancePrice.text.toString().toDouble()
 
         val insurance = mapOf<String, Any?>(
             "insuranceName" to  insuranceName,
             "insurancePlan" to insurancePlan,
             "insuranceCoverage" to insuranceCoverage,
             "insuranceComp" to insuranceComp,
-            "insuranceType" to insuranceType
+            "insuranceType" to insuranceType,
+            "insurancePrice" to insurancePrice
         )
+
+        showLoading()
 
         insuranceRef.orderByChild("insuranceID").equalTo(args.insuranceID.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds in snapshot.children){
                     if (ds.exists()){
                         ds.key?.let {
-                            insuranceRef.child(it).updateChildren(insurance)
-                                .addOnSuccessListener {
-                                    Toast.makeText(
-                                        context,
-                                        "Update Successful",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    loadData(args.insuranceID.toString())
-                                }
+
+                            Handler().postDelayed({
+                                insuranceRef.child(it).updateChildren(insurance)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(
+                                            context,
+                                            "Update Successful",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        hideLoading()
+                                        loadData(args.insuranceID.toString())
+                                    }
+                            }, 3000)
                         }
                     }
                 }
@@ -241,9 +256,15 @@ class UpdateInsuranceFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         })
+    }
 
+    private fun hideLoading() {
+        loadingDialog?.let { if(it.isShowing) it.cancel() }
+    }
 
-
+    private fun showLoading() {
+        hideLoading()
+        loadingDialog = MyLottie.showLoadingDialog(requireContext())
     }
 
 }

@@ -8,7 +8,7 @@ import my.edu.tarc.kotlinswipemenu.R
 import my.edu.tarc.kotlinswipemenu.databinding.InsuranceItemCustLayoutBinding
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 
-class InsuranceCustAdapter (internal var insuranceList:MutableList<Insurance>, val clickListener: InsuranceCustAdapter.ApplyListener) :
+class InsuranceCustAdapter (internal var insuranceList:MutableList<Insurance>, val clickListener: ApplyListener) :
 RecyclerView.Adapter<InsuranceCustAdapter.myViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
@@ -24,11 +24,16 @@ RecyclerView.Adapter<InsuranceCustAdapter.myViewHolder>()
         holder.insurancePlan.text = currentItem.insurancePlan
         holder.insuranceType.text = currentItem.insuranceType
         var strCover : String? = ""
+        val lastCover: String? = currentItem.insuranceCoverage?.last()
         for (insCover in currentItem.insuranceCoverage!!) {
-            strCover += insCover + ",\n"
+            strCover += if(insCover == lastCover) {
+                "$insCover"
+            } else {
+                "$insCover,\n"
+            }
         }
-
         holder.insuranceCoverage.text = strCover
+        holder.insurancePrice.text = currentItem.insurancePrice.toString()
 
         holder.bind(currentItem, clickListener)
     }
@@ -59,7 +64,7 @@ RecyclerView.Adapter<InsuranceCustAdapter.myViewHolder>()
         val insurancePlan: TextView = binding.tvCustInsurancePlan
         val insuranceType: TextView = binding.tvCustInsuranceType
         val insuranceCoverage: TextView = binding.tvCustInsuranceCoverage
-
+        val insurancePrice : TextView = binding.tvCustInsurancePrice2
     }
 
     class ApplyListener(val clickListener: (InsuranceID: String) -> Unit) {

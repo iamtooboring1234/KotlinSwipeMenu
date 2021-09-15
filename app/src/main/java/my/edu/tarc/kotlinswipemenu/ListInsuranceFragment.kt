@@ -2,14 +2,17 @@ package my.edu.tarc.kotlinswipemenu
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -18,8 +21,10 @@ import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.Helper.MyButton
 import my.edu.tarc.kotlinswipemenu.Helper.MySwipeHelper
 import my.edu.tarc.kotlinswipemenu.Listener.MyButtonClickListener
+import my.edu.tarc.kotlinswipemenu.adapter.InsuranceApplicationAdapter
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentListInsuranceBinding
+import my.edu.tarc.kotlinswipemenu.viewModel.InsuranceApplication
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -32,7 +37,7 @@ class ListInsuranceFragment : Fragment() {
     private val myRef = database.getReference("Insurance")
 
     private var insuranceList = ArrayList<Insurance>()
-    private var tempinsuranceList = ArrayList<Insurance>()
+    private var tempInsuranceList = ArrayList<Insurance>()
 
     private lateinit var binding : FragmentListInsuranceBinding
 
@@ -58,7 +63,7 @@ class ListInsuranceFragment : Fragment() {
                     object: MyButtonClickListener{
                         override fun onClick(pos: Int) {
 
-                            strMsg = "DELETE ID " + insuranceList[pos].insuranceID + " successfully deleted."
+                            strMsg = "Insurance successfully deleted."
 
                             deleteData(insuranceList[pos].insuranceID, object : FirebaseSuccessListener {
                                 override fun onDataFound(isDataFetched: Boolean, Key: String) {
@@ -101,26 +106,144 @@ class ListInsuranceFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 if (newText!!.isNotEmpty()) {
-                    tempinsuranceList.clear()
+                    tempInsuranceList.clear()
                     val search = newText.lowercase(Locale.getDefault())
                     for (insurance in insuranceList) {
                         val combineText:String = insurance.insuranceID + "-" + insurance.insuranceComp + "-" + insurance.insuranceName
                         if (combineText.lowercase(Locale.getDefault()).contains(search)) {
-                            tempinsuranceList.add(insurance)
+                            if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "Company") {
+                                if (insurance.insuranceComp == binding.spinnerInsuranceComp.selectedItem) {
+                                    tempInsuranceList.add(insurance)
+                                }
+                            } else if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "Type") {
+                                if (insurance.insuranceType == binding.spinnerInsuranceType.selectedItem) {
+                                    tempInsuranceList.add(insurance)
+                                }
+                            } else if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "All") {
+                                tempInsuranceList.add(insurance)
+                            }
                         }
                     }
 
-                    adapter = InsuranceAdapter(requireActivity(), tempinsuranceList)
-                    binding.rvInsuranceList.adapter = adapter
+                    changeView(tempInsuranceList)
 
-                    binding.rvInsuranceList.adapter!!.notifyDataSetChanged()
+                } else {
+                    tempInsuranceList.clear()
+                    for (insurance in insuranceList) {
+                        if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "Company") {
+                            if (insurance.insuranceComp == binding.spinnerInsuranceComp.selectedItem) {
+                                tempInsuranceList.add(insurance)
+                            }
+                        } else if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "Type") {
+                            if (insurance.insuranceType == binding.spinnerInsuranceType.selectedItem) {
+                                tempInsuranceList.add(insurance)
+                            }
+                        } else if (binding.tabInsuranceFIlter.getTabAt(binding.tabInsuranceFIlter.selectedTabPosition)?.text == "All") {
+                            tempInsuranceList.add(insurance)
+                        }
 
+                    }
+
+                    changeView(tempInsuranceList)
                 }
 
                 return true
             }
 
         })
+
+        binding.btnInsuranceFilter.setOnClickListener() {
+            if(binding.tabInsuranceFIlter.visibility == View.GONE) {
+                binding.tabInsuranceFIlter.visibility = View.VISIBLE
+
+                binding.tabInsuranceFIlter.setOnTabSelectedListener(object :
+                    TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        var selectedApplication: ArrayList<Insurance> = ArrayList<Insurance>()
+                        binding.clInsuranceType.visibility = View.GONE
+                        binding.clInsuranceComp.visibility = View.GONE
+
+                        when (tab?.position) {
+                            0 -> {
+                                selectedApplication = insuranceList
+                                binding.clInsuranceType.visibility = View.GONE
+                                binding.clInsuranceComp.visibility = View.GONE
+                                binding.searchInsurance.setQuery("", false)
+                                binding.searchInsurance.clearFocus()
+                            }
+                            1 -> {
+                                binding.subTabInsuranceFilter.visibility = View.VISIBLE
+                                binding.clInsuranceComp.visibility = View.VISIBLE
+                                binding.spinnerInsuranceComp.visibility = View.VISIBLE
+
+                                selectedApplication = insuranceList.filter{ s -> s.insuranceComp == binding.spinnerInsuranceComp.selectedItem} as ArrayList<Insurance>
+                            }
+                            2 -> {
+                                binding.subTabInsuranceFilter.visibility = View.VISIBLE
+                                binding.clInsuranceType.visibility = View.VISIBLE
+                                binding.spinnerInsuranceType.visibility = View.VISIBLE
+                                selectedApplication = insuranceList.filter{ s -> s.insuranceComp == binding.spinnerInsuranceType.selectedItem} as ArrayList<Insurance>
+                            }
+                        }
+
+                        changeView(selectedApplication)
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+                    }
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                        binding.searchInsurance.setQuery("", false)
+                        binding.searchInsurance.clearFocus()
+                    }
+
+                })
+
+            } else {
+                binding.tabInsuranceFIlter.visibility = View.GONE
+                binding.spinnerInsuranceComp.visibility = View.GONE
+                binding.spinnerInsuranceType.visibility = View.GONE
+            }
+        }
+
+        binding.spinnerInsuranceComp.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    var selectedApplication: ArrayList<Insurance> = ArrayList<Insurance>()
+                    val selectedComp  = binding.spinnerInsuranceComp.selectedItem.toString()
+                    selectedApplication = insuranceList.filter{ s -> s.insuranceComp == selectedComp} as ArrayList<Insurance>
+                    changeView(selectedApplication)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
+
+        binding.spinnerInsuranceType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    var selectedApplication: ArrayList<Insurance> = ArrayList<Insurance>()
+                    val selectedType   = binding.spinnerInsuranceType.selectedItem.toString()
+                    selectedApplication = insuranceList.filter{ s -> s.insuranceType == selectedType} as ArrayList<Insurance>
+                    changeView(selectedApplication)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
 
         loadData()
         onRefresh()
@@ -151,15 +274,21 @@ class ListInsuranceFragment : Fragment() {
 
                     }
 
-                    tempinsuranceList.addAll(insuranceList)
+                    tempInsuranceList.addAll(insuranceList)
                     binding.shimmerViewContainer.stopShimmer()
                     binding.shimmerViewContainer.visibility = View.GONE
                     binding.rvInsuranceList.visibility = View.VISIBLE
+                    binding.tvNoRecord.visibility = View.GONE
                     binding.rvInsuranceList.adapter?.notifyDataSetChanged()
 
                 } else {
                     insuranceList.clear()
-                    tempinsuranceList.clear()
+                    tempInsuranceList.clear()
+                    Handler().postDelayed ({
+                        binding.shimmerViewContainer.stopShimmer()
+                        binding.shimmerViewContainer.visibility = View.GONE
+                        binding.tvNoRecord.visibility = View.VISIBLE
+                    }, 3000)
                     binding.rvInsuranceList.visibility = View.INVISIBLE
                     binding.rvInsuranceList.adapter?.notifyDataSetChanged()
                 }
@@ -170,8 +299,7 @@ class ListInsuranceFragment : Fragment() {
             }
         })
 
-        adapter = InsuranceAdapter(requireActivity(), insuranceList)
-        binding.rvInsuranceList.adapter = adapter
+        changeView(insuranceList)
     }
 
     private fun deleteData(insuranceID : String?, dataFetched:FirebaseSuccessListener) {
@@ -219,6 +347,12 @@ class ListInsuranceFragment : Fragment() {
 
     interface FirebaseSuccessListener {
         fun onDataFound(isDataFetched: Boolean, Key: String)
+    }
+
+    private fun changeView(insuranceList: List<Insurance>) {
+        adapter = InsuranceAdapter(requireActivity(), insuranceList)
+        binding.rvInsuranceList.adapter = adapter
+        binding.rvInsuranceList.adapter!!.notifyDataSetChanged()
     }
 
 }

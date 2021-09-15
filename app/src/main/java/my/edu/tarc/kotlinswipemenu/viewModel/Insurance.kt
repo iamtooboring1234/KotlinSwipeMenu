@@ -6,5 +6,6 @@ data class Insurance(
     val insuranceComp: String?=null,
     val insurancePlan: String?=null,
     val insuranceType: String?=null,
-    val insuranceCoverage: List<String>? = null
+    val insuranceCoverage: List<String>? = null,
+    val insurancePrice : Double? = null
 )

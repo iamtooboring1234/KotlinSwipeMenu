@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.R
 
-class InsuranceAdapter(internal var context: Context, internal var insuranceList:MutableList<Insurance>) :
+class InsuranceAdapter(internal var context: Context, internal var insuranceList:List<Insurance>) :
     RecyclerView.Adapter<InsuranceAdapter.myViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
@@ -19,9 +19,8 @@ class InsuranceAdapter(internal var context: Context, internal var insuranceList
 
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
         val currentItem = insuranceList[position]
-        val strMsg:String = currentItem.insuranceID + "-" + currentItem.insuranceComp + "-" + currentItem.insuranceName
+        val strMsg:String = currentItem.insuranceComp + "-" + currentItem.insuranceName + " (" + currentItem.insurancePlan + ")"
         holder.insuranceName.text = strMsg
-
     }
 
     override fun getItemCount(): Int {

@@ -1,6 +1,9 @@
 package my.edu.tarc.kotlinswipemenu
 
+import android.app.Dialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +14,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import my.edu.tarc.kotlinswipemenu.Helper.MyLottie
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceAdapter
 import my.edu.tarc.kotlinswipemenu.viewModel.Insurance
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentAddInsuranceBinding
 import my.edu.tarc.kotlinswipemenu.functions.ResetForm
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 class InsuranceAddFragment : Fragment() {
 
@@ -29,6 +34,8 @@ class InsuranceAddFragment : Fragment() {
     private var insuranceList = ArrayList<Insurance>()
     private var insuranceTypeList = ArrayList<String>()
 
+    private var completeDialog: Dialog?= null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +43,14 @@ class InsuranceAddFragment : Fragment() {
         loadData()
 
         binding = FragmentAddInsuranceBinding.inflate(inflater,  container ,false)
+
+        binding.tfAddInsurancePrice.addDecimalLimiter(2)
+
+        val insuranceComp = resources.getStringArray(R.array.insurance_comp)
+        val insuranceCompAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, insuranceComp)
+        binding.tfAddInsuranceComp.setAdapter(insuranceCompAdapter)
+
+        binding.tfAddInsuranceComp
 
         binding.btnBackAddInsurance.setOnClickListener() {
             val action = InsuranceAddFragmentDirections.actionInsuranceAddFragmentToListInsuranceFragment()
@@ -52,6 +67,7 @@ class InsuranceAddFragment : Fragment() {
             val insuranceName:String = binding.tfAddInsuranceName.text.toString()
             val insurancePlan:String = binding.tfAddInsurancePlan.text.toString()
             val insuranceType:String = binding.ddlAddInsuranceType.selectedItem.toString()
+            val insurancePrice: String = binding.tfAddInsurancePrice.text.toString()
             var insuranceCoverage: ArrayList<String> = ArrayList()
 
             if(binding.cbBodyInjury.isChecked){
@@ -67,8 +83,8 @@ class InsuranceAddFragment : Fragment() {
                 insuranceCoverage.add(binding.cbPropertyDmg.text.toString())
             }
 
-            if(insuranceComp.isNotEmpty() && insuranceName.isNotEmpty() && insurancePlan.isNotEmpty() && insuranceType.isNotEmpty() && insuranceCoverage.isNotEmpty()) {
-                insertData(insuranceComp,insuranceName,insurancePlan,insuranceType,insuranceCoverage)
+            if(insuranceComp.isNotEmpty() && insuranceName.isNotEmpty() && insurancePlan.isNotEmpty() && insuranceType.isNotEmpty() && insuranceCoverage.isNotEmpty() && insurancePrice.isNotEmpty()) {
+                insertData(insuranceComp,insuranceName,insurancePlan,insuranceType,insuranceCoverage, insurancePrice)
             } else {
                 Toast.makeText(requireContext(), "Please fill in the required details!", Toast.LENGTH_LONG).show()
             }
@@ -78,19 +94,19 @@ class InsuranceAddFragment : Fragment() {
         return binding.root
     }
 
-    private fun insertData(insuranceComp: String, insuranceName: String, insurancePlan: String, insuranceType: String, insuranceCoverage: ArrayList<String>) {
+    private fun insertData(insuranceComp: String, insuranceName: String, insurancePlan: String, insuranceType: String, insuranceCoverage: ArrayList<String>, insurancePrice: String) {
 
         var newID:String = ""
 
         insuranceRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    newID = "IN" + "%03d".format(snapshot.childrenCount + 1)
+                    newID = UUID.randomUUID().toString()
                 } else {
-                    newID = "RR0001"
+                    newID = UUID.randomUUID().toString()
                 }
 
-                val newInsurance = Insurance(newID, insuranceName, insuranceComp, insurancePlan, insuranceType, insuranceCoverage)
+                val newInsurance = Insurance(newID, insuranceName, insuranceComp, insurancePlan, insuranceType, insuranceCoverage, insurancePrice.toDouble())
 
                 insuranceRef.push().setValue(newInsurance).addOnSuccessListener(){
                     Toast.makeText(context, "Add successful", Toast.LENGTH_LONG).show()
@@ -129,6 +145,7 @@ class InsuranceAddFragment : Fragment() {
                         insuranceList.add(insurance)
                     }
 
+                    /*
                     for(ds in insuranceList) {
                         if(!insuranceTypeList.contains(ds.insuranceType)) {
                             ds.insuranceType?.let { insuranceTypeList.add(it) }
@@ -158,6 +175,7 @@ class InsuranceAddFragment : Fragment() {
                             TODO("Not yet implemented")
                         }
                     }
+                    */
 
                 } else {
                     insuranceList.clear()
@@ -169,5 +187,76 @@ class InsuranceAddFragment : Fragment() {
 
             }
         })
+    }
+
+    fun EditText.addDecimalLimiter(maxLimit: Int = 2) {
+
+        this.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                val str = this@addDecimalLimiter.text!!.toString()
+                if (str.isEmpty()) return
+                val str2 = decimalLimiter(str, maxLimit)
+
+                if (str2 != str) {
+                    this@addDecimalLimiter.setText(str2)
+                    val pos = this@addDecimalLimiter.text!!.length
+                    this@addDecimalLimiter.setSelection(pos)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        })
+    }
+
+    fun decimalLimiter(string: String, MAX_DECIMAL: Int): String {
+
+        var str = string
+        if (str[0] == '.') str = "0$str"
+        val max = str.length
+
+        var rFinal = ""
+        var after = false
+        var i = 0
+        var up = 0
+        var decimal = 0
+        var t: Char
+
+        val decimalCount = str.count { ".".contains(it) }
+
+        if (decimalCount > 1)
+            return str.dropLast(1)
+
+        while (i < max) {
+            t = str[i]
+            if (t != '.' && !after) {
+                up++
+            } else if (t == '.') {
+                after = true
+            } else {
+                decimal++
+                if (decimal > MAX_DECIMAL)
+                    return rFinal
+            }
+            rFinal += t
+            i++
+        }
+        return rFinal
+    }
+
+    private fun hideLoading() {
+        completeDialog?.let { if(it.isShowing) it.cancel() }
+    }
+
+    private fun showLoading() {
+        hideLoading()
+        completeDialog = MyLottie.showCompleteDialog(requireContext())
     }
 }
