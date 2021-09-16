@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 
 class InsuranceAddFragment : Fragment() {
 
-    lateinit var adapter : InsuranceAdapter
+    private lateinit var adapter : InsuranceAdapter
 
     private val database = FirebaseDatabase.getInstance()
     private val insuranceRef = database.getReference("Insurance")

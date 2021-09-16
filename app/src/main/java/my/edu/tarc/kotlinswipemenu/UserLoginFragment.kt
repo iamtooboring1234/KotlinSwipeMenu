@@ -86,7 +86,6 @@ class UserLoginFragment : Fragment() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser:FirebaseUser? = auth.currentUser
-        println("chankinlam" + auth.currentUser)
         updateUI(currentUser)
     }
 

@@ -38,6 +38,10 @@ class NavigationFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
 
+        binding.btnViewApplication.setOnClickListener() {
+            val action = NavigationFragmentDirections.actionNavigationFragmentToListInsuranceApplicationCustViewFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
 
 
         return binding.root
