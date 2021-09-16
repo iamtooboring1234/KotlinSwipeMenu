@@ -271,7 +271,7 @@ class UpdateInsuranceApplicationFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
         })
     }
