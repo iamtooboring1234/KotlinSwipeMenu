@@ -290,6 +290,8 @@ class ApplyInsuranceFragment : Fragment() {
                             for (child in insuranceSnapshot.child("insuranceCoverage").children) {
                                 insuranceCoverage.add(child.value.toString())
                             }
+                            val insurancePrice: String =
+                                insuranceSnapshot.child("insurancePrice").value.toString()
 
                             val insurance = Insurance(
                                 insuranceID,
@@ -297,7 +299,8 @@ class ApplyInsuranceFragment : Fragment() {
                                 insuranceComp,
                                 insurancePlan,
                                 insuranceType,
-                                insuranceCoverage
+                                insuranceCoverage,
+                                insurancePrice.toDouble()
                             )
 
                             insuranceCustList.add(insurance)

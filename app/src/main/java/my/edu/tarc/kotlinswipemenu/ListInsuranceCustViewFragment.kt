@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.firebase.database.DataSnapshot
@@ -53,6 +54,17 @@ class ListInsuranceCustViewFragment : Fragment() {
             }, 3000)
 
         })
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    val action = ListInsuranceCustViewFragmentDirections.actionListInsuranceCustViewFragmentToNavigationFragment()
+                    Navigation.findNavController(requireView()).navigate(action)
+
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
 
         binding.btnBackListInsuranceCustView.setOnClickListener() {
             val action = ListInsuranceCustViewFragmentDirections.actionListInsuranceCustViewFragmentToNavigationFragment()

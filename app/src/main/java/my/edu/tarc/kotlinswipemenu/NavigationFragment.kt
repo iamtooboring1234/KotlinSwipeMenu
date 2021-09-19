@@ -43,6 +43,11 @@ class NavigationFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
 
+        binding.btnToReferralInsuranceListings.setOnClickListener() {
+            val action = NavigationFragmentDirections.actionNavigationFragmentToReferralInsuranceListingFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
 
         return binding.root
     }

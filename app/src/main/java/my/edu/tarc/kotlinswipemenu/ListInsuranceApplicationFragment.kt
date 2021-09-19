@@ -1,11 +1,13 @@
 package my.edu.tarc.kotlinswipemenu
 
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.tabs.TabLayout
@@ -13,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import my.edu.tarc.kotlinswipemenu.Helper.MyLottie
 import my.edu.tarc.kotlinswipemenu.adapter.InsuranceApplicationAdapter
 import my.edu.tarc.kotlinswipemenu.databinding.FragmentListInsuranceApplicationBinding
 import my.edu.tarc.kotlinswipemenu.viewModel.InsuranceApplication
@@ -32,7 +35,7 @@ class ListInsuranceApplicationFragment : Fragment() {
 
     private lateinit var binding: FragmentListInsuranceApplicationBinding
 
-    private var dialog = LoadingDialogFragment()
+    private var loadingDialog : Dialog?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +47,17 @@ class ListInsuranceApplicationFragment : Fragment() {
         loadData()
 
         binding.rvInsApplication.setHasFixedSize(true)
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    val action = ListInsuranceApplicationFragmentDirections.actionListInsuranceApplicationFragmentToNavigationFragment()
+                    Navigation.findNavController(requireView()).navigate(action)
+
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
 
         binding.btnBackListInsuranceApplication.setOnClickListener() {
             val action = ListInsuranceApplicationFragmentDirections.actionListInsuranceApplicationFragmentToNavigationFragment()
@@ -221,7 +235,7 @@ class ListInsuranceApplicationFragment : Fragment() {
         adapterInsApp = InsuranceApplicationAdapter(insuranceApplicationList, InsuranceApplicationAdapter.ViewListener{
                 applicationID,insuranceID -> val it = view
 
-            showProgressBar()
+            showLoading()
 
             val action = ListInsuranceApplicationFragmentDirections.actionListInsuranceApplicationFragmentToUpdateInsuranceApplicationFragment(applicationID, insuranceID)
             view?.let { Navigation.findNavController(it).navigate(action) }
@@ -232,9 +246,15 @@ class ListInsuranceApplicationFragment : Fragment() {
         binding.rvInsApplication.adapter!!.notifyDataSetChanged()
     }
 
-    private fun showProgressBar(){
-        dialog.show(getChildFragmentManager(), "loadingDialog")
+    private fun hideLoading() {
+        loadingDialog?.let { if(it.isShowing) it.cancel() }
     }
+
+    private fun showLoading() {
+        hideLoading()
+        loadingDialog = MyLottie.showLoadingDialog(requireContext())
+    }
+
 
 /*    private fun insertData() {
 

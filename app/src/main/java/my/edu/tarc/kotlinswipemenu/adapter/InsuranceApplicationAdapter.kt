@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -48,8 +49,9 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:List<In
                         for(child in insuranceSnapshot.child("insuranceCoverage").children){
                             insuranceCoverage.add(child.value.toString())
                         }
+                        val insurancePrice: String = insuranceSnapshot.child("insurancePrice").value.toString()
 
-                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage)
+                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage,insurancePrice.toDouble())
 
                         tempInsList.add(insurance)
 
@@ -90,8 +92,10 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:List<In
             holder.applicationStatus.setTextColor(Color.parseColor("#EC512B"))
         } else if (currentItem.applicationStatus.equals("Rejected")) {
             holder.applicationStatus.setTextColor(Color.parseColor("#F30E15"))
+            holder.viewDetails.visibility = View.GONE
         } else {
             holder.applicationStatus.setTextColor(Color.parseColor("#31B12C"))
+            holder.viewDetails.visibility = View.GONE
         }
 
         holder.bind(currentItem!!, clickListener)
@@ -124,6 +128,7 @@ class InsuranceApplicationAdapter (internal var insuranceApplicationList:List<In
         val insuranceComp: TextView = binding.tvApplicationInsuranceComp
         val insuranceName: TextView = binding.tvApplicationInsuranceName
         val applicationStatus: TextView = binding.tvApplicationStatusText
+        val viewDetails: Button = binding.btnViewDetails
 
         val expandableLayout: ConstraintLayout = binding.expandableLayout
         val toExpandLayout: ConstraintLayout = binding.toExpandLayout

@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_navigationFragment_to_listInsuranceApplicationCustViewFragment"
             app:destination="@id/listInsuranceApplicationCustViewFragment" />
+        <action
+            android:id="@+id/action_navigationFragment_to_referralInsuranceListingFragment"
+            app:destination="@id/referralInsuranceListingFragment" />
     </fragment>
     <fragment
         android:id="@+id/applyInsuranceFragment"
@@ -160,6 +163,31 @@
             app:nullable="true" />
         <argument
             android:name="applicationID"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/referralInsuranceListingFragment"
+        android:name="my.edu.tarc.kotlinswipemenu.ReferralInsuranceListingFragment"
+        android:label="ReferralInsuranceListingFragment"
+        tools:layout="@layout/fragment_referral_insurance_listing">
+        <action
+            android:id="@+id/action_referralInsuranceListingFragment_to_cancelInsuranceCustFragment"
+            app:destination="@id/cancelInsuranceCustFragment" />
+        <action
+            android:id="@+id/action_referralInsuranceListingFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cancelInsuranceCustFragment"
+        android:name="my.edu.tarc.kotlinswipemenu.CancelInsuranceCustFragment"
+        android:label="fragment_cancel_insurance_cust"
+        tools:layout="@layout/fragment_cancel_insurance_cust" >
+        <action
+            android:id="@+id/action_cancelInsuranceCustFragment_to_referralInsuranceListingFragment"
+            app:destination="@id/referralInsuranceListingFragment" />
+        <argument
+            android:name="referralInsuranceID"
             app:argType="string"
             app:nullable="true" />
     </fragment>

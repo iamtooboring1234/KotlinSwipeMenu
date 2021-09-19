@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
@@ -82,6 +83,17 @@ class ViewInsuranceApplicationCustFragment : Fragment() {
             }
         }
 
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    val action = ViewInsuranceApplicationCustFragmentDirections.actionViewInsuranceApplicationCustFragmentToListInsuranceApplicationCustViewFragment()
+                    Navigation.findNavController(requireView()).navigate(action)
+
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
+
         binding.imgBackViewInsuranceApplicationCust.setOnClickListener() {
             val action = ViewInsuranceApplicationCustFragmentDirections.actionViewInsuranceApplicationCustFragmentToListInsuranceApplicationCustViewFragment()
             Navigation.findNavController(it).navigate(action)
@@ -140,6 +152,8 @@ class ViewInsuranceApplicationCustFragment : Fragment() {
                             for (child in insuranceSnapshot.child("insuranceCoverage").children) {
                                 insuranceCoverage.add(child.value.toString())
                             }
+                            val insurancePrice: String =
+                                insuranceSnapshot.child("insurancePrice").value.toString()
 
                             val insurance = Insurance(
                                 insuranceID,
@@ -147,7 +161,8 @@ class ViewInsuranceApplicationCustFragment : Fragment() {
                                 insuranceComp,
                                 insurancePlan,
                                 insuranceType,
-                                insuranceCoverage
+                                insuranceCoverage,
+                                insurancePrice.toDouble()
                             )
 
                             insuranceCustList.add(insurance)

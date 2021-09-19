@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.Navigation
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.DataSnapshot
@@ -46,6 +47,17 @@ class ListInsuranceApplicationCustViewFragment : Fragment() {
         loadData()
 
         binding.rvInsApplicationCustView.setHasFixedSize(true)
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    val action = ListInsuranceApplicationCustViewFragmentDirections.actionListInsuranceApplicationCustViewFragmentToNavigationFragment()
+                    Navigation.findNavController(requireView()).navigate(action)
+
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
 
         binding.btnBackListInsuranceApplicationCustView.setOnClickListener() {
             val action = ListInsuranceApplicationCustViewFragmentDirections.actionListInsuranceApplicationCustViewFragmentToNavigationFragment()

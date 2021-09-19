@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -92,6 +93,16 @@ class ListInsuranceFragment : Fragment() {
             val action = ListInsuranceFragmentDirections.actionListInsuranceFragmentToInsuranceAddFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    val action = ListInsuranceFragmentDirections.actionListInsuranceFragmentToNavigationFragment()
+                    Navigation.findNavController(requireView()).navigate(action)
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
 
         binding.btnBackListInsurance.setOnClickListener() {
             val action = ListInsuranceFragmentDirections.actionListInsuranceFragmentToNavigationFragment()
@@ -267,8 +278,10 @@ class ListInsuranceFragment : Fragment() {
                         for(child in insuranceSnapshot.child("insuranceCoverage").children){
                             insuranceCoverage.add(child.value.toString())
                         }
+                        val insurancePrice: String = insuranceSnapshot.child("insurancePrice").value.toString()
+                        println(insurancePrice)
 
-                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage)
+                        val insurance = Insurance(insuranceID,insuranceName,insuranceComp,insurancePlan,insuranceType,insuranceCoverage, insurancePrice.toDouble())
 
                         insuranceList.add(insurance)
 
@@ -326,23 +339,6 @@ class ListInsuranceFragment : Fragment() {
             Toast.makeText(requireContext(), "Refresh", Toast.LENGTH_SHORT).show()
             binding.srlInsuranceList.isRefreshing = false
         }
-    }
-
-    //Data Initialize
-    private fun insertData(){
-        val insList: List<Insurance> = listOf(
-            Insurance("IN001","Car insurance","Etiqa","Plan A", "Act Cover",listOf("Coverage 1")),
-            Insurance("IN002","Motor insurance","Prudential","Plan C", "Third Party Cover",listOf("Coverage 1")),
-            Insurance("IN003","Truck insurance","Etiqa","Plan D", "Third Party, Fire and Theft cover",listOf("Coverage 1")),
-            Insurance("IN005","Truck insurance","AIA","Plan D", "Third Party, Fire and Theft cover",listOf("Coverage 1")),
-            Insurance("IN006","Truck insurance","Great Eastern","Plan D", "Comprehensive cover",listOf("Coverage 1")),
-            Insurance("IN004","Van insurance","Prudential","Plan B", "Act Cover",listOf("Coverage 1") )
-        )
-
-        for (insurance in insList) {
-            myRef.push().setValue(insurance)
-        }
-
     }
 
     interface FirebaseSuccessListener {
